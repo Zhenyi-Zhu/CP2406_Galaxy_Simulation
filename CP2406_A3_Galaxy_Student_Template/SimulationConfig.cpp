@@ -1,5 +1,6 @@
 #include "SimulationConfig.h"
 
+#include <cmath>
 #include <stdexcept>
 #include <string>
 
@@ -19,10 +20,10 @@ void SimulationConfig::validate() const
             "body count must be at least 2");
     }
 
-    if (systemSizeAU <= 0)
+    if (!std::isfinite(systemSizeAU) || systemSizeAU <= 0)
     {
         throw std::invalid_argument(
-            "system size must be positive");
+            "system size must be finite and positive");
     }
 
     if (steps < 1)
@@ -31,16 +32,16 @@ void SimulationConfig::validate() const
             "steps must be at least 1");
     }
 
-    if (dtSeconds <= 0)
+    if (!std::isfinite(dtSeconds) || dtSeconds <= 0)
     {
         throw std::invalid_argument(
-            "time step must be positive");
+            "time step must be finite and positive");
     }
 
-    if (collisionThresholdAU < 0)
+    if (!std::isfinite(collisionThresholdAU) || collisionThresholdAU < 0)
     {
         throw std::invalid_argument(
-            "collision threshold cannot be negative");
+            "collision threshold must be finite and non-negative");
     }
 }
 
