@@ -2,7 +2,7 @@
 
 ## Scope and environment
 
-Tests run by the AI coding assistant in Linux with GCC 13.3, C++20 and CMake 4.4.4. This is evidence for the code changes; it is not a claim that the student ran these checks in Windows. Verify the new revision in CLion before recording local results.
+The automated build and executable-level checks below were run by the AI coding assistant in Linux with GCC 13.3, C++20 and CMake 4.4.4. The separate Windows section records the student's subsequent CLion results supplied in the conversation on 28 October 2026.
 
 ## Build and automated checks
 
@@ -38,13 +38,23 @@ The baseline used:
 
 Its CSV remained the template's placeholder (`experiment,status` followed by `baseline,baseline`). The MP4 was non-empty and FFmpeg reported success; this automated check does not replace visual inspection of the simulation.
 
-## Windows verification to perform
+## Windows verification — 28 October 2026
 
-1. Pull the new commit, reload CMake, build and run `ConfigTests`. Expected: `PASS: 142 configuration checks` and exit 0.
-2. Switch back to `Galaxy` and run `--help`. Confirm the expanded help and exit 0.
-3. Run `--bodies -1`, `--bodies 200abc`, `--seed 4294967296` and `--output --steps 2` separately. Each should report the relevant option and exit 1.
-4. Restore the baseline arguments above and run. Confirm 20 frames and successful MP4 generation using the existing local FFmpeg setup.
-5. Save screenshots of the actual results for the development log. Do not record these Windows checks as passed until they have been run.
+The student ran the following checks in Windows/CLion. Evidence is the pasted console output, except where explicitly identified as a user confirmation.
+
+| Check | Observed result | Evidence |
+|---|---|---|
+| `ConfigTests.exe` | `PASS: 142 configuration checks`; exit 0 | Console output |
+| `Galaxy.exe --bodies -1` | `Error: --bodies requires a non-negative integer`; exit 1 | Console output |
+| `Galaxy.exe --bodies 200abc` | Expected rejection confirmed | Student reported all requested cases correct; individual output not supplied |
+| `Galaxy.exe --seed 4294967296` | `Error: value out of range for --seed`; exit 1 | Console output |
+| `Galaxy.exe --output --steps 2` | `Error: missing value for --output`; exit 1 | Console output |
+| `Galaxy.exe --help` | Expanded help, including defaults and ranges; exit 0 | Console output |
+| Original 200-body, 20-step baseline | `Created 20 frames in images/.`, `Created galaxy.mp4`, `Completed baseline run` | Console output supplied earlier in this session |
+
+These Windows results validate the local test executable, the selected error paths, help and the baseline output pipeline. The filesystem-error and sentinel-preservation scenarios above were checked in Linux; they have not been separately confirmed on Windows.
+
+To repeat the checks, select `ConfigTests` in CLion and run without arguments, then switch to `Galaxy` and run each argument set separately. Restore the baseline arguments afterwards. Save actual console screenshots for the development log.
 
 ## Remaining work
 
