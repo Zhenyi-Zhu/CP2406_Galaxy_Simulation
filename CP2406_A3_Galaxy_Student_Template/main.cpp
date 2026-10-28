@@ -76,9 +76,9 @@ int main(int argc, char** argv)
         std::cout << "Completed baseline run\n";
         return 0;
     }
-    catch (const std::runtime_error& error)
+    catch (const HelpRequested&)
     {
-        std::cout << error.what() << '\n';
+        std::cout << helpText() << '\n';
         return 0;
     }
     catch (const std::exception& error)
@@ -87,3 +87,4 @@ int main(int argc, char** argv)
         return 1;
     }
 }
+

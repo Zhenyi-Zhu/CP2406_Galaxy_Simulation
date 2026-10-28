@@ -2,7 +2,13 @@
 #define SIMULATION_CONFIG_H
 #include <cstddef>
 #include <cstdint>
+#include <exception>
 #include <string>
+// A distinct signal prevents real runtime failures from being reported as success.
+struct HelpRequested : std::exception {
+    const char* what() const noexcept override { return "help requested"; }
+};
+
 struct SimulationConfig {
     std::size_t bodyCount{2048};
     double systemSizeAU{10.0};
@@ -17,3 +23,4 @@ struct SimulationConfig {
 SimulationConfig parseArguments(int argc, char** argv);
 std::string helpText();
 #endif
+

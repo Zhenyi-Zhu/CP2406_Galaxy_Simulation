@@ -36,6 +36,33 @@ Open the generated MP4 with a Windows media player. Keep `ffmpeg.exe`, generated
 
 These checks verify the baseline execution and video pipeline; they do not yet verify collision correctness or complete the assessment experiments.
 
+## Development record — 28 October 2026
+
+- Added strict integer parsing: reject negative values, fractional counts, trailing characters and values outside the destination type's range.
+- Added full-token floating-point parsing while retaining finite-value and domain checks. Scientific notation is supported.
+- Detect missing option values, including when the next token is another option, and reject blank output paths.
+- Expanded help with units, defaults and accepted ranges. A dedicated `HelpRequested` exception keeps help separate from real runtime errors.
+- Added the `ConfigTests` target and CTest registration. The tests remain active in Release builds.
+- AI-assisted verification in a Linux/GCC 13.3 environment passed 142 configuration checks and eight executable-level scenarios. A normal baseline still generated 20 frames, a placeholder CSV and an MP4. Windows/CLion verification of this update remains to be performed locally.
+
+See [the configuration test record](TESTING.md) for evidence, limitations and local verification steps.
+
+## Run the configuration tests
+
+In CLion, reload CMake, select the `ConfigTests` target, then build and run it. It requires no FFmpeg and creates no simulation outputs. If the target is absent, enable `BUILD_TESTING` in the CMake profile.
+
+Alternatively, from the source folder with CMake on PATH:
+
+```text
+cmake -S . -B build
+cmake --build build
+ctest --test-dir build --output-on-failure
+```
+
+For a multi-configuration generator, add `--config Debug` to the build command and `-C Debug` to CTest. Avoid changing the generator in an existing build directory.
+
+Integer arguments accept decimal digits only. Repeated options use the last successfully parsed value. Quote output paths that contain spaces. Paths beginning with `--` can be written with a directory prefix such as `./--results.csv`.
+
 ## Next development step
 
-Review and strengthen command-line parsing and input validation in `SimulationConfig.cpp` and its header. Check valid inputs, missing values, unknown options, invalid numbers and boundary values, and record the actual test results.
+Implement collision merging and bounded random pair sampling, then test conservation, inactive bodies and threshold boundaries. Review initialisation for very small positive system sizes: the starter currently uses a fixed 0.1 AU inner radius. Complete CSV reporting and the required experiments afterwards.

@@ -15,3 +15,10 @@ add_executable(Galaxy
         Simulation.cpp
         SimulationConfig.cpp
 )
+
+include(CTest)
+if(BUILD_TESTING)
+    add_executable(ConfigTests tests/ConfigTests.cpp SimulationConfig.cpp)
+    target_include_directories(ConfigTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+    add_test(NAME configuration_validation COMMAND ConfigTests)
+endif()
