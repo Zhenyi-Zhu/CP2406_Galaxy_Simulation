@@ -4,7 +4,7 @@ This project is based on the lecturer-provided Galaxy starter template. The base
 
 ## Build and run on Windows
 
-1. Open the folder containing `main.cpp` and `CMakeLists.txt` in CLion.
+1. Open the `CP2406_A3_Galaxy_Student_Template` subfolder containing `main.cpp` and `CMakeLists.txt` in CLion.
 2. Configure the MinGW toolchain and reload CMake. The project requires C++20.
 3. Build the `Galaxy` target.
 4. In the Galaxy run configuration, set the working directory to the folder containing `main.cpp`.
@@ -45,13 +45,13 @@ These checks verify the baseline execution and video pipeline; they do not yet v
 - Added the `ConfigTests` target and CTest registration. The tests remain active in Release builds.
 - AI-assisted verification in a Linux/GCC 13.3 environment passed 142 configuration checks and eight executable-level scenarios. A normal baseline still generated 20 frames, a placeholder CSV and an MP4. Windows/CLion verification of this update remains to be performed locally.
 
-See [the configuration test record](TESTING.md) for evidence, limitations and local verification steps.
+See [the configuration test record](CP2406_A3_Galaxy_Student_Template/TESTING.md) for evidence, limitations and local verification steps.
 
 ## Run the configuration tests
 
 In CLion, reload CMake, select the `ConfigTests` target, then build and run it. It requires no FFmpeg and creates no simulation outputs. If the target is absent, enable `BUILD_TESTING` in the CMake profile.
 
-Alternatively, from the source folder with CMake on PATH:
+Alternatively, from the `CP2406_A3_Galaxy_Student_Template` source subfolder with CMake on PATH:
 
 ```text
 cmake -S . -B build
