@@ -1,6 +1,6 @@
-# CP2406 Galaxy Option - Student Template
+# CP2406 Galaxy Simulation
 
-This project is based on the lecturer-provided Galaxy starter template. The baseline project runs, but the assessed collision, reporting, rendering and experiment behaviour is still incomplete. Refer to the assignment document for the full requirements.
+This project is based on the lecturer-provided Galaxy starter template. The program supports validated configuration, seeded collision sampling and safe body merging. Full experiment reporting and comparative analysis are still in progress.
 
 ## Build and run on Windows
 
@@ -43,7 +43,7 @@ These checks verify the baseline execution and video pipeline; they do not yet v
 - Detect missing option values, including when the next token is another option, and reject blank output paths.
 - Expanded help with units, defaults and accepted ranges. A dedicated `HelpRequested` exception keeps help separate from real runtime errors.
 - Added the `ConfigTests` target and CTest registration. The tests remain active in Release builds.
-- AI-assisted verification in a Linux/GCC 13.3 environment passed 142 configuration checks and eight executable-level scenarios. A normal baseline still generated 20 frames, a placeholder CSV and an MP4. Windows/CLion verification of this update remains to be performed locally.
+- AI-assisted verification in a Linux/GCC 13.3 environment passed 142 configuration checks and eight executable-level scenarios. A normal baseline still generated 20 frames, a placeholder CSV and an MP4. The student subsequently passed all 142 configuration checks and the selected CLI checks in Windows/CLion; the results are recorded in TESTING.md.
 
 See [the configuration test record](CP2406_A3_Galaxy_Student_Template/TESTING.md) for evidence, limitations and local verification steps.
 
@@ -63,6 +63,27 @@ For a multi-configuration generator, add `--config Debug` to the build command a
 
 Integer arguments accept decimal digits only. Repeated options use the last successfully parsed value. Quote output paths that contain spaces. Paths beginning with `--` can be written with a directory prefix such as `./--results.csv`.
 
+## Development record — 29 October 2026
+
+- Implemented `checkAndMergeCollision` and attempt-bounded `sampleAndMergeCollisions`.
+- Positive thresholds include exact-boundary distances; threshold zero disables merging and zero samples skips sampling.
+- Preserved mass, centre-of-mass position and linear momentum during merging; retained vector slots and cleared retired state. Acceleration is mass-weighted for the following integration update.
+- Added `CollisionTests`: 18 focused cases passed in the assistant's Linux environment, including fixed-seed repetition and conservation. The existing 142 configuration checks also passed.
+- Integrated 40-body runs verified repeatability and conserved mass, with merging enabled and disabled. Student Windows verification of this collision update remains pending.
+- Aligned the code-review and journal drafts with the uploaded Appendix A/B structures. Personal reflections, later journal entries and declarations remain to be completed.
+
+## Run collision tests
+
+Reload CMake, select `CollisionTests` and run without arguments. Expected final line: `PASS: 18 collision test cases`. CTest also runs this suite. See [collision test evidence](CP2406_A3_Galaxy_Student_Template/COLLISION_TESTING.md) for rules, inputs, expected/actual results and environment limits.
+
+The seeded engine/distribution repeats for the same starting data and build. Exact random index sequences are not promised across different standard-library implementations.
+
+## Assessment documents
+
+- [Code review — Appendix A working draft](CP2406_A3_Galaxy_Student_Template/CODE_REVIEW.md)
+- [Development journal — Appendix B working draft](CP2406_A3_Galaxy_Student_Template/PROJECT_JOURNAL.md)
+- [Submission format and completion checklist](CP2406_A3_Galaxy_Student_Template/SUBMISSION_CHECKLIST.md)
+
 ## Next development step
 
-Implement collision merging and bounded random pair sampling, then test conservation, inactive bodies and threshold boundaries. Review initialisation for very small positive system sizes: the starter currently uses a fixed 0.1 AU inner radius. Complete CSV reporting and the required experiments afterwards.
+Verify the collision update in Windows, implement complete experiment CSV/statistics, and run controlled comparisons. Review initialisation for system sizes below the starter's fixed 0.1 AU inner radius. Complete the review, journal and 3–5 minute demonstration after the remaining implementation and experiments.

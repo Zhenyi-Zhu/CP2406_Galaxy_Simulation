@@ -58,4 +58,5 @@ To repeat the checks, select `ConfigTests` in CLion and run without arguments, t
 
 ## Remaining work
 
-Collision correctness, complete statistics/CSV reporting, physical stability and assessment experiments are not verified by this suite. The starter's fixed 0.1 AU inner sampling radius also needs review before using system sizes below 0.1 AU.
+This configuration suite does not verify collision correctness, complete statistics/CSV reporting, physical stability or assessment experiments. Collision implementation and separate Linux test results added on 29 October are recorded in [COLLISION_TESTING.md](COLLISION_TESTING.md); student Windows collision verification is pending. The starter's fixed 0.1 AU inner sampling radius also needs review before using system sizes below 0.1 AU.
+
