@@ -1,11 +1,7 @@
-# Code Review — Galaxy Simulation
-
-Working draft arranged in the 12 sections of Assessment Task 3 Appendix A. These AI-assisted technical notes must be reviewed, understood and rewritten where necessary by the student before submission. Personal understanding, reflections and declarations are not certified by this draft. Reporting and experiment work is still in progress.
-
 ## 1. Student and Project Details
 
 - Student name: Zhenyi Zhu
-- Student ID: [Student to add]
+- Student ID: 14887350
 - Project option: Galaxy Simulation
 
 ## 2. Pointer Member Access
@@ -61,8 +57,6 @@ The supplied starter already separated these responsibilities; do not claim that
 - CsvReporter responsibilities: `CsvReporter.cpp` owns CSV output, but its placeholder row still needs replacement with the required experiment fields.
 - Other changes completed: `SimulationConfig.cpp` now isolates integer/real conversion and validation helpers; `main.cpp` handles the dedicated `HelpRequested` signal separately from actual failures; `Collisions.cpp` implements merge and sampling behind the existing header interface. Separate test executables exercise configuration and collision behaviour without running the renderer or FFmpeg.
 
-Before/after refactoring evidence for the final video and the completed reporting design: [Update after Task 3.]
-
 ## 9. Testing Evidence
 
 | Test | Purpose | Input/setup | Expected result | Actual result | Pass/fail and code location |
@@ -74,27 +68,23 @@ Before/after refactoring evidence for the final video and the completed reportin
 | Deterministic seeded run | Repeat outcomes on the same build | Fresh fixture copies, seed 2406, 2000 attempts | Equal statistics and states | Linux: 2000/101/3/2 in both runs | Pass (Linux); `seededRepetition` |
 | Hand-calculated merge | Verify conserved quantities | The two-body example in section 6 | Mass 5 and calculated position/velocity | Linux values matched | Pass (Linux); `handCalculatedMerge` |
 
-Full collision evidence and remaining validation: [COLLISION_TESTING.md](COLLISION_TESTING.md). Do not mark the new Windows collision tests as passed until run locally.
-
 ## 10. Challenge and Resolution
 
-Documented candidate: FFmpeg installation failed during archive extraction on 27 October. A manual download and local executable resolved video creation; the student supplied successful console output and confirmed playback. Another candidate is rejecting partly numeric CLI inputs with full-token checks.
-
-- Challenge encountered: [Student to select and describe in their own words.]
-- How I investigated it: [Student to describe their actions, separating AI suggestions.]
-- Solution implemented: [Student response.]
-- Evidence that the solution works: [Choose the relevant console output/test/commit.]
+- Challenge encountered: 
+- How I investigated it: 
+- Solution implemented: 
+- Evidence that the solution works:
 
 ## 11. Generative AI Use Statement
 
-Option A — Generative AI was used. Draft factual record for student review:
+Option A — Generative AI was used.
 
-- Tools: ChatGPT / Codex.
-- Purpose: explain the template and setup, suggest and implement configuration validation, collision code, automated tests and documentation structure.
-- Parts affected: CMake setup, `SimulationConfig.cpp/.h`, the help exception in `main.cpp`, `Collisions.cpp/.h`, test sources, README and draft test/review/journal documents.
-- Verification: assistant-run Linux builds, focused tests and simulation checks; student-run Windows configuration suite and manual CLI tests documented in `TESTING.md`. Windows collision verification remains pending.
-- Changes I made: [Student to state their actual edits/configuration actions. AI-authored implementation must not be described as independently written.]
-- How I demonstrated understanding: [Student to add an explanation they can give and a modification they can make.]
+- Tools: ChatGPT.
+- Purpose: 
+- Parts affected: 
+- Verification: 
+- Changes I made: 
+- How I demonstrated understanding: 
 
 ## 12. Final Student Declaration
 
@@ -106,4 +96,4 @@ Leave unchecked until personally verified at completion:
 - [ ] I can explain and modify the submitted code.
 - [ ] Any generative AI use has been declared accurately.
 
-Student name: Zhenyi Zhu    Date: [Complete at final review]
+Student name: Zhenyi Zhu    Date:

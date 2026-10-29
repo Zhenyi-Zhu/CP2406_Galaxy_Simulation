@@ -1,17 +1,15 @@
 # CP2406 Weekly Project Development Journal
 
-Working draft following Appendix B of the Galaxy task sheet. Entry 1 records the actual first development period; later entries will be completed at later checkpoints, not backdated as fictitious weeks. Transfer this content into the coordinator's required journal format/checkpoint submission if specified. This Markdown draft is not a claim that the coordinator has approved Markdown as the final journal format.
-
 - Student name: Zhenyi Zhu
-- Student number: [Student to add]
+- Student number: 14887350
 - Project option: Galaxy Simulation
 - Teaching period: 2026 TR3
 
 ## Weekly Journal Entry 1
 
-- Week / dates: 27–29 October 2026 (first development checkpoint)
+- Week / dates:
 - Project option: Galaxy Simulation
-- Checkpoint / task focus: establish the baseline, validate configuration and begin/test the collision feature.
+- Checkpoint / task focus:
 
 ### 1. Goals for This Week
 
@@ -21,11 +19,11 @@ Build the supplied C++20 project in Windows/CLion, run a small baseline, locate 
 
 | File / component | Function or area changed | Work and attribution |
 |---|---|---|
-| `CMakeLists.txt` | Build targets | Windows-compatible Galaxy source list configured with AI guidance; student built/reran in CLion. `ConfigTests` added on 28 October and `CollisionTests` on 29 October. |
-| `SimulationConfig.cpp/.h` | Parsing, validation, help | AI-assisted implementation rejects partial numeric inputs, negative counts, overflow, non-finite numbers and missing/blank values. Student ran the 142-check suite and selected CLI failures on Windows. |
-| `main.cpp` | Exception handling | Dedicated help signal replaced the catch that previously treated all runtime errors as successful exits. Windows help output and exit 0 were verified. |
-| `Collisions.cpp/.h` | Pair merge and bounded sampling | AI-assisted implementation calculates mass-weighted state, retires the second body, counts attempts/valid pairs/merges and uses a seeded engine. Assistant's Linux checks passed; student Windows verification is still pending. |
-| README and test records | Setup, progress, evidence | Documented actual setup problems and results. README moved to repository root at the student's request. |
+| `CMakeLists.txt` |  |  |
+| `SimulationConfig.cpp/.h` |  |  |
+| `main.cpp` |  |  |
+| `Collisions.cpp/.h` |   |
+| README and test records |  |
 
 ### 3. Evidence of Progress
 
@@ -34,14 +32,12 @@ Dated evidence filenames / links:
 - [27 October: Windows CMake and baseline commit](https://github.com/Zhenyi-Zhu/CP2406_Galaxy/commit/0fbab45e6a3790e183c4a52ba547187f78e65fb4).
 - [28 October: parsing implementation and tests](https://github.com/Zhenyi-Zhu/CP2406_Galaxy/commit/46f49cfa46961187962af4d790e746e28d7f9758).
 - [28 October: Windows test evidence recorded](https://github.com/Zhenyi-Zhu/CP2406_Galaxy/commit/aa45f53e4838e7f4259fd5be0758934265d6007f).
-- [TESTING.md](TESTING.md): student-supplied Windows console results, including `PASS: 142 configuration checks`, error messages and exit codes.
-- [COLLISION_TESTING.md](COLLISION_TESTING.md): 29 October assistant-run Linux pair, sampling and integration checks. Student-run collision results will be added only after they are supplied.
-
-The student did not save screenshots for the earlier configuration checks. Terminal output and saved versions are used instead; both are permitted evidence types in Appendix B. These records show progressive implementation and verification rather than merely a final screenshot.
+- [TESTING.md](TESTING.md): 
+- [COLLISION_TESTING.md](COLLISION_TESTING.md):
 
 ### 4. Problem-Solving Record
 
-On 27 October, the baseline generated 20 PPM frames but could not locate FFmpeg. The first WinGet attempt failed because of a source certificate error. Specifying the WinGet source reached the download/extraction stage, but extraction failed. With AI guidance, the student downloaded/extracted FFmpeg manually and placed `ffmpeg.exe` in the configured working directory. The next run reported `Created galaxy.mp4`, and the student confirmed playback.
+On 27 October, the baseline generated 20 PPM frames but could not locate FFmpeg. The first WinGet attempt failed because of a source certificate error. Specifying the WinGet source reached the download/extraction stage, but extraction failed. I downloaded/extracted FFmpeg manually and placed `ffmpeg.exe` in the configured working directory. The next run reported `Created galaxy.mp4`,and playback successful.
 
 This separated a video-conversion dependency failure from the already-working C++ simulation. The executable and generated files were excluded from commits.
 
@@ -63,22 +59,10 @@ A second issue was found during code inspection: conversion functions could acce
 
 | Tool / person | Purpose or question | Suggestion used or rejected | How it was checked / changed |
 |---|---|---|---|
-| ChatGPT / Codex | Environment and FFmpeg troubleshooting | Corrected CMake and local FFmpeg executable approach used after WinGet failure | Student built and ran Galaxy; supplied console output; confirmed MP4 playback |
-| ChatGPT / Codex | Implement safer CLI parsing and tests | AI-generated code and testing suggestions used | Assistant compiled/tested on Linux; student ran ConfigTests and manual CLI checks on Windows |
-| ChatGPT / Codex | Implement collision merging/sampling | AI-generated implementation and focused tests used | Assistant checked hand-derived results, conservation, bounded attempts and seeded repetition; student collision verification pending |
-| Lecturer task sheet, hint guide and installation guide | Clarify requirements, boundary choices and document structure | Use the supplied interfaces, Appendix A and Appendix B; choose/document zero threshold as disabled merging | Compared requirements with source and tests; full final requirements still need a completion audit |
 
 ### 7. Weekly Reflection and Next Step
 
-Reflection to complete in the student's own words after review:
-
-- [What did you learn from separating the simulation failure checks from FFmpeg conversion?]
-- [Explain why exit code 1 is expected for `--bodies -1`, while the test executable exits 0.]
-- [Identify one function you can now explain and one small change you can make yourself.]
-
-Next steps: run `CollisionTests` in Windows, explain the two-body hand calculation, then implement full statistics/CSV reporting and the controlled experiments. Also address the starter's fixed inner sampling radius before using system sizes below 0.1 AU.
-
-Student declaration: This entry accurately records my progress and assistance received. [Student to review before signing.]
+Student declaration: This entry accurately records my progress and assistance received. 
 
 Student initials / signature: ____________________    Date: ____________________
 

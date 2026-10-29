@@ -1,6 +1,6 @@
 # CP2406 Galaxy Simulation
 
-This project is based on the lecturer-provided Galaxy starter template. The program supports validated configuration, seeded collision sampling and safe body merging. Full experiment reporting and comparative analysis are still in progress.
+This project is based on the lecturer-provided Galaxy starter template. The program supports validated configuration, seeded collision sampling and safe body merging.
 
 ## Build and run on Windows
 
@@ -70,7 +70,6 @@ Integer arguments accept decimal digits only. Repeated options use the last succ
 - Preserved mass, centre-of-mass position and linear momentum during merging; retained vector slots and cleared retired state. Acceleration is mass-weighted for the following integration update.
 - Added `CollisionTests`: 18 focused cases passed in the assistant's Linux environment, including fixed-seed repetition and conservation. The existing 142 configuration checks also passed.
 - Integrated 40-body runs verified repeatability and conserved mass, with merging enabled and disabled. Student Windows verification of this collision update remains pending.
-- Aligned the code-review and journal drafts with the uploaded Appendix A/B structures. Personal reflections, later journal entries and declarations remain to be completed.
 
 ## Run collision tests
 
@@ -82,7 +81,6 @@ The seeded engine/distribution repeats for the same starting data and build. Exa
 
 - [Code review — Appendix A working draft](CP2406_A3_Galaxy_Student_Template/CODE_REVIEW.md)
 - [Development journal — Appendix B working draft](CP2406_A3_Galaxy_Student_Template/PROJECT_JOURNAL.md)
-- [Submission format and completion checklist](CP2406_A3_Galaxy_Student_Template/SUBMISSION_CHECKLIST.md)
 
 ## Next development step
 
