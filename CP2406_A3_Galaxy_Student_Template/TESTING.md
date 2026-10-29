@@ -2,7 +2,7 @@
 
 ## Scope and environment
 
-The automated build and executable-level checks below were run by the AI coding assistant in Linux with GCC 13.3, C++20 and CMake 4.4.4. The separate Windows section records the student's subsequent CLion results supplied in the conversation on 28 October 2026.
+I used ChatGPT/Codex to run the automated build and executable-level checks below in Linux with GCC 13.3, C++20 and CMake 4.4.4. I separately ran the Windows/CLion checks recorded in the Windows section on 28 October 2026.
 
 ## Build and automated checks
 
@@ -40,23 +40,23 @@ Its CSV remained the template's placeholder (`experiment,status` followed by `ba
 
 ## Windows verification — 28 October 2026
 
-The student ran the following checks in Windows/CLion. Evidence is the pasted console output, except where explicitly identified as a user confirmation.
+I ran the following checks in Windows/CLion. My evidence is the console output I recorded, except where I confirmed a result without supplying its individual output.
 
 | Check | Observed result | Evidence |
 |---|---|---|
 | `ConfigTests.exe` | `PASS: 142 configuration checks`; exit 0 | Console output |
 | `Galaxy.exe --bodies -1` | `Error: --bodies requires a non-negative integer`; exit 1 | Console output |
-| `Galaxy.exe --bodies 200abc` | Expected rejection confirmed | Student reported all requested cases correct; individual output not supplied |
+| `Galaxy.exe --bodies 200abc` | Expected rejection confirmed | I confirmed that all requested cases were correct; I did not supply this case's individual output |
 | `Galaxy.exe --seed 4294967296` | `Error: value out of range for --seed`; exit 1 | Console output |
 | `Galaxy.exe --output --steps 2` | `Error: missing value for --output`; exit 1 | Console output |
 | `Galaxy.exe --help` | Expanded help, including defaults and ranges; exit 0 | Console output |
 | Original 200-body, 20-step baseline | `Created 20 frames in images/.`, `Created galaxy.mp4`, `Completed baseline run` | Console output supplied earlier in this session |
 
-These Windows results validate the local test executable, the selected error paths, help and the baseline output pipeline. The filesystem-error and sentinel-preservation scenarios above were checked in Linux; they have not been separately confirmed on Windows.
+These Windows results validate the local test executable, the selected error paths, help and the baseline output pipeline. I used the tool-run Linux results for the filesystem-error and sentinel-preservation scenarios; I have not separately confirmed those cases on Windows.
 
-To repeat the checks, select `ConfigTests` in CLion and run without arguments, then switch to `Galaxy` and run each argument set separately. Restore the baseline arguments afterwards. Save actual console screenshots for the development log.
+To repeat my checks, I can select `ConfigTests` in CLion and run without arguments, then switch to `Galaxy` and run each argument set separately. Afterwards, I will restore the baseline arguments. I can use console output or screenshots as evidence in my development log.
 
 ## Remaining work
 
-This configuration suite does not verify collision correctness, complete statistics/CSV reporting, physical stability or assessment experiments. Collision implementation and separate Linux test results added on 29 October are recorded in [COLLISION_TESTING.md](COLLISION_TESTING.md); student Windows collision verification is pending. The starter's fixed 0.1 AU inner sampling radius also needs review before using system sizes below 0.1 AU.
+This configuration suite does not verify collision correctness, complete statistics/CSV reporting, physical stability or assessment experiments. Collision implementation and separate Linux test results added on 29 October are recorded in [COLLISION_TESTING.md](COLLISION_TESTING.md); my Windows collision verification is pending. The starter's fixed 0.1 AU inner sampling radius also needs review before using system sizes below 0.1 AU.
 

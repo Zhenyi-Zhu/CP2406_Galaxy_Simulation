@@ -12,7 +12,7 @@
 
 ## Automated pair/pass tests
 
-Source: `tests/CollisionTests.cpp`. These results were produced by the AI coding assistant on Linux/GCC 13.3 with C++20. Windows/CLion verification of the collision update is pending. Tests throw on failure and remain effective in Release builds.
+Source: `tests/CollisionTests.cpp`. I used ChatGPT/Codex to run these checks in its Linux/GCC 13.3 environment with C++20. I still need to verify the collision update in my Windows/CLion environment. Tests throw on failure and remain effective in Release builds.
 
 | Case | Input / purpose | Expected | Actual |
 |---|---|---|---|
@@ -53,10 +53,10 @@ These are integration checks, not the final controlled experiment matrix. Comple
 
 ## Local verification
 
-Pull, reload CMake, select `CollisionTests`, and run without program arguments. Expected final line:
+For my Windows verification, I will pull the update, reload CMake, select `CollisionTests`, and run without program arguments. I expect the final line:
 
 ```text
 PASS: 18 collision test cases
 ```
 
-The valid-pair count in the printed seed demonstration may differ between standard libraries; each local repeated run must match itself. Confirm `ConfigTests` still reports 142 checks. Record the actual Windows output after running; screenshots are optional because terminal output is also acceptable evidence.
+The valid-pair count in the printed seed demonstration may differ between standard libraries; each local repeated run must match itself. I will also confirm that `ConfigTests` still reports 142 checks and record my actual Windows output. I can use terminal output as evidence without taking screenshots.

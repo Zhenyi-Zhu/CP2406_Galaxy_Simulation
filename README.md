@@ -1,6 +1,6 @@
 # CP2406 Galaxy Simulation
 
-This project is based on the lecturer-provided Galaxy starter template. The program supports validated configuration, seeded collision sampling and safe body merging.
+I am developing this project from the lecturer-provided Galaxy starter template. The program supports validated configuration, seeded collision sampling and safe body merging.
 
 ## Build and run on Windows
 
@@ -26,24 +26,24 @@ Open the generated MP4 with a Windows media player. Keep `ffmpeg.exe`, generated
 
 ## Development record — 27 October 2026
 
-- Updated CMake for the Windows build and confirmed the `Galaxy` target builds successfully.
-- Verified that `--help` displays the command-line options.
-- Ran the baseline with 200 bodies, 20 steps and seed 2406.
+- I updated CMake with AI guidance and confirmed that the `Galaxy` target built successfully in Windows.
+- I verified that `--help` displayed the command-line options.
+- I ran the baseline with 200 bodies, 20 steps and seed 2406.
 - The first run produced frames but could not find FFmpeg.
 - The WinGet installation attempt failed during archive extraction. A manually extracted executable placed in the working directory resolved video generation.
-- The subsequent run reported `Created galaxy.mp4` and exited with code 0. Playback was also checked successfully.
-- Committed the CMake configuration, ignore rules and initial CSV output.
+- The subsequent run reported `Created galaxy.mp4` and exited with code 0. I also confirmed successful playback.
+- I committed the CMake configuration, ignore rules and initial CSV output.
 
 These checks verify the baseline execution and video pipeline; they do not yet verify collision correctness or complete the assessment experiments.
 
 ## Development record — 28 October 2026
 
-- Added strict integer parsing: reject negative values, fractional counts, trailing characters and values outside the destination type's range.
-- Added full-token floating-point parsing while retaining finite-value and domain checks. Scientific notation is supported.
-- Detect missing option values, including when the next token is another option, and reject blank output paths.
-- Expanded help with units, defaults and accepted ranges. A dedicated `HelpRequested` exception keeps help separate from real runtime errors.
-- Added the `ConfigTests` target and CTest registration. The tests remain active in Release builds.
-- AI-assisted verification in a Linux/GCC 13.3 environment passed 142 configuration checks and eight executable-level scenarios. A normal baseline still generated 20 frames, a placeholder CSV and an MP4. The student subsequently passed all 142 configuration checks and the selected CLI checks in Windows/CLion; the results are recorded in TESTING.md.
+- I incorporated AI-assisted integer parsing that rejects negative values, fractional counts, trailing characters and values outside the destination type's range.
+- I incorporated full-token floating-point parsing with finite-value and domain checks. Scientific notation is supported.
+- My validation detects missing option values, including when the next token is another option, and rejects blank output paths.
+- I incorporated expanded help with units, defaults and accepted ranges. A dedicated `HelpRequested` exception keeps help separate from real runtime errors.
+- I incorporated the AI-generated `ConfigTests` target and CTest registration. The tests remain active in Release builds.
+- I used ChatGPT/Codex for Linux/GCC 13.3 verification, which passed 142 configuration checks and eight executable-level scenarios. A normal baseline generated 20 frames, a placeholder CSV and an MP4. I then ran all 142 configuration checks and the selected CLI cases successfully in Windows/CLion; I recorded the results in TESTING.md.
 
 See [the configuration test record](CP2406_A3_Galaxy_Student_Template/TESTING.md) for evidence, limitations and local verification steps.
 
@@ -65,11 +65,11 @@ Integer arguments accept decimal digits only. Repeated options use the last succ
 
 ## Development record — 29 October 2026
 
-- Implemented `checkAndMergeCollision` and attempt-bounded `sampleAndMergeCollisions`.
+- I incorporated AI-assisted implementations of `checkAndMergeCollision` and attempt-bounded `sampleAndMergeCollisions`.
 - Positive thresholds include exact-boundary distances; threshold zero disables merging and zero samples skips sampling.
 - Preserved mass, centre-of-mass position and linear momentum during merging; retained vector slots and cleared retired state. Acceleration is mass-weighted for the following integration update.
-- Added `CollisionTests`: 18 focused cases passed in the assistant's Linux environment, including fixed-seed repetition and conservation. The existing 142 configuration checks also passed.
-- Integrated 40-body runs verified repeatability and conserved mass, with merging enabled and disabled. Student Windows verification of this collision update remains pending.
+- I incorporated the AI-generated `CollisionTests` suite and used ChatGPT/Codex to run it in Linux. All 18 focused cases passed, including fixed-seed repetition and conservation. The existing 142 configuration checks also passed.
+- I used tool-run 40-body integration checks to verify repeatability and conserved mass with merging enabled and disabled. My Windows verification of this collision update remains pending.
 
 ## Run collision tests
 
@@ -84,4 +84,4 @@ The seeded engine/distribution repeats for the same starting data and build. Exa
 
 ## Next development step
 
-Verify the collision update in Windows, implement complete experiment CSV/statistics, and run controlled comparisons. Review initialisation for system sizes below the starter's fixed 0.1 AU inner radius. Complete the review, journal and 3–5 minute demonstration after the remaining implementation and experiments.
+I will verify the collision update in Windows, complete experiment CSV/statistics, and run controlled comparisons. I will review initialisation for system sizes below the starter's fixed 0.1 AU inner radius, then finish my code review, journal and 3–5 minute demonstration.
