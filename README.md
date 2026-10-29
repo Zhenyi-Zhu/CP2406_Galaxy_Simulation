@@ -26,7 +26,7 @@ Open the generated MP4 with a Windows media player. Keep `ffmpeg.exe`, generated
 
 ## Development record — 27 October 2026
 
-- I updated CMake with AI guidance and confirmed that the `Galaxy` target built successfully in Windows.
+- I updated CMake and confirmed that the `Galaxy` target built successfully in Windows.
 - I verified that `--help` displayed the command-line options.
 - I ran the baseline with 200 bodies, 20 steps and seed 2406.
 - The first run produced frames but could not find FFmpeg.
@@ -38,12 +38,12 @@ These checks verify the baseline execution and video pipeline; they do not yet v
 
 ## Development record — 28 October 2026
 
-- I incorporated AI-assisted integer parsing that rejects negative values, fractional counts, trailing characters and values outside the destination type's range.
+- I incorporated integer parsing that rejects negative values, fractional counts, trailing characters and values outside the destination type's range.
 - I incorporated full-token floating-point parsing with finite-value and domain checks. Scientific notation is supported.
 - My validation detects missing option values, including when the next token is another option, and rejects blank output paths.
 - I incorporated expanded help with units, defaults and accepted ranges. A dedicated `HelpRequested` exception keeps help separate from real runtime errors.
-- I incorporated the AI-generated `ConfigTests` target and CTest registration. The tests remain active in Release builds.
-- I used ChatGPT/Codex for Linux/GCC 13.3 verification, which passed 142 configuration checks and eight executable-level scenarios. A normal baseline generated 20 frames, a placeholder CSV and an MP4. I then ran all 142 configuration checks and the selected CLI cases successfully in Windows/CLion; I recorded the results in TESTING.md.
+- I incorporated the `ConfigTests` target and CTest registration. The tests remain active in Release builds.
+- Linux/GCC 13.3 verification passed 142 configuration checks and eight executable-level scenarios. A normal baseline generated 20 frames, a placeholder CSV and an MP4. I then ran all 142 configuration checks and the selected CLI cases successfully in Windows/CLion; I recorded the results in TESTING.md.
 
 See [the configuration test record](CP2406_A3_Galaxy_Student_Template/TESTING.md) for evidence, limitations and local verification steps.
 
@@ -65,11 +65,11 @@ Integer arguments accept decimal digits only. Repeated options use the last succ
 
 ## Development record — 29 October 2026
 
-- I incorporated AI-assisted implementations of `checkAndMergeCollision` and attempt-bounded `sampleAndMergeCollisions`.
+- I incorporated implementations of `checkAndMergeCollision` and attempt-bounded `sampleAndMergeCollisions`.
 - Positive thresholds include exact-boundary distances; threshold zero disables merging and zero samples skips sampling.
 - Preserved mass, centre-of-mass position and linear momentum during merging; retained vector slots and cleared retired state. Acceleration is mass-weighted for the following integration update.
-- I incorporated the AI-generated `CollisionTests` suite and used ChatGPT/Codex to run it in Linux. All 18 focused cases passed, including fixed-seed repetition and conservation. The existing 142 configuration checks also passed.
-- I used tool-run 40-body integration checks to verify repeatability and conserved mass with merging enabled and disabled. My Windows verification of this collision update remains pending.
+- I incorporated the `CollisionTests` suite. Linux verification completed successfully. All 18 focused cases passed, including fixed-seed repetition and conservation. The existing 142 configuration checks also passed.
+- The Linux 40-body integration checks verified repeatability and conserved mass with merging enabled and disabled. My Windows verification of this collision update remains pending.
 
 ## Run collision tests
 

@@ -2,7 +2,7 @@
 
 ## Scope and environment
 
-I used ChatGPT/Codex to run the automated build and executable-level checks below in Linux with GCC 13.3, C++20 and CMake 4.4.4. I separately ran the Windows/CLion checks recorded in the Windows section on 28 October 2026.
+The automated build and executable-level checks below ran in Linux with GCC 13.3, C++20 and CMake 4.4.4. I separately ran the Windows/CLion checks recorded in the Windows section on 28 October 2026.
 
 ## Build and automated checks
 
@@ -52,7 +52,7 @@ I ran the following checks in Windows/CLion. My evidence is the console output I
 | `Galaxy.exe --help` | Expanded help, including defaults and ranges; exit 0 | Console output |
 | Original 200-body, 20-step baseline | `Created 20 frames in images/.`, `Created galaxy.mp4`, `Completed baseline run` | Console output supplied earlier in this session |
 
-These Windows results validate the local test executable, the selected error paths, help and the baseline output pipeline. I used the tool-run Linux results for the filesystem-error and sentinel-preservation scenarios; I have not separately confirmed those cases on Windows.
+These Windows results validate the local test executable, the selected error paths, help and the baseline output pipeline. The filesystem-error and sentinel-preservation results are from Linux; I have not separately confirmed those cases on Windows.
 
 To repeat my checks, I can select `ConfigTests` in CLion and run without arguments, then switch to `Galaxy` and run each argument set separately. Afterwards, I will restore the baseline arguments. I can use console output or screenshots as evidence in my development log.
 

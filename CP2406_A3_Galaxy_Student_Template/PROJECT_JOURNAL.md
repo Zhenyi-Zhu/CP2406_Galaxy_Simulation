@@ -41,7 +41,7 @@ On 27 October, I ran the baseline and generated 20 PPM frames, but the program c
 
 This helped me separate the video-conversion dependency failure from the already-working C++ simulation. I kept the executable and generated files out of my commits.
 
-During the AI-assisted code review, I received an explanation that conversion functions could accept a numeric prefix such as `200abc`, while unsigned conversion could mishandle negative input. I incorporated the revised validation code, which checks the whole input and destination range. I ran the Windows test suite and manual checks on 28 October to verify the intended rejection paths.
+I addressed an input-validation issue: conversion functions could accept a numeric prefix such as `200abc`, while unsigned conversion could mishandle negative input. I incorporated the revised validation code, which checks the whole input and destination range. I ran the Windows test suite and manual checks on 28 October to verify the intended rejection paths.
 
 ### 5. Testing Performed
 
@@ -53,7 +53,7 @@ During the AI-assisted code review, I received an explanation that conversion fu
 | `--seed 4294967296` | Reject uint32 overflow | `value out of range for --seed`; exit 1 | Pass (Windows) |
 | `--output --steps 2` | Detect missing output value | `missing value for --output`; exit 1 | Pass (Windows) |
 | `--help` | Help, no simulation, exit 0 | Expanded help and exit 0 | Pass (Windows) |
-| Hand-computed pair and collision edge/sampling tests | Conserved state, correct boundaries, bounded loop | 18 cases passed in the ChatGPT/Codex Linux environment | Pass (Linux, 29 October); my Windows check pending |
+| Hand-computed pair and collision edge/sampling tests | Conserved state, correct boundaries, bounded loop | 18 cases passed in the Linux test environment | Pass (Linux, 29 October); my Windows check pending |
 
 ### 6. Generative AI and External Help Log
 

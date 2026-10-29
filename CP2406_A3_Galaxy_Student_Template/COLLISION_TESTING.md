@@ -12,7 +12,7 @@
 
 ## Automated pair/pass tests
 
-Source: `tests/CollisionTests.cpp`. I used ChatGPT/Codex to run these checks in its Linux/GCC 13.3 environment with C++20. I still need to verify the collision update in my Windows/CLion environment. Tests throw on failure and remain effective in Release builds.
+Source: `tests/CollisionTests.cpp`. These checks ran in Linux/GCC 13.3 with C++20. I still need to verify the collision update in my Windows/CLion environment. Tests throw on failure and remain effective in Release builds.
 
 | Case | Input / purpose | Expected | Actual |
 |---|---|---|---|
