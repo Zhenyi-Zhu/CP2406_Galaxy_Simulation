@@ -58,5 +58,43 @@ To repeat my checks, I can select `ConfigTests` in CLion and run without argumen
 
 ## Remaining work
 
-This configuration suite does not verify collision correctness, complete statistics/CSV reporting, physical stability or assessment experiments. Collision implementation and separate Linux test results added on 29 October are recorded in [COLLISION_TESTING.md](COLLISION_TESTING.md); my Windows collision verification is pending. The starter's fixed 0.1 AU inner sampling radius also needs review before using system sizes below 0.1 AU.
+This configuration suite does not verify collision correctness, complete statistics/CSV reporting, physical stability or assessment experiments. Collision implementation and Linux/Windows test results from 29 October are recorded in [COLLISION_TESTING.md](COLLISION_TESTING.md). Reporting verification from 30 October is recorded below; its Windows check is pending. The starter's fixed 0.1 AU inner sampling radius also needs review before using system sizes below 0.1 AU.
 
+
+## Reporting verification — 30 October 2026
+
+Environment: Linux, GCC 13.3, C++20, CMake 4.4.4, Release, `-Wall -Wextra -Wpedantic`. The build completed without compiler diagnostics. CTest passed 3/3 suites: 142 configuration checks, 18 collision cases and 10 reporting cases. My Windows/CLion check of this update is pending.
+
+Source: `tests/ReportingTests.cpp`. Tests use explicit exceptions, including in Release builds.
+
+| Case | Expected | Actual (Linux) |
+|---|---|---|
+| Known configuration and results | Exact 19-column schema, one header/row, every metric in its column | Passed |
+| Locale and precision | Decimal point despite a comma-decimal global locale; adjacent doubles round-trip | Passed |
+| Text escaping | Commas, quotes and embedded newline in a name; comma in output path | Decoded correctly |
+| Repeat write | Identical input bytes produce identical report; replace rather than duplicate rows/headers | Passed |
+| Missing parent directory | Throw on open failure | Passed |
+| Unwritable destination | Throw for directory destination; also detect buffered `/dev/full` failure on Linux | Passed |
+| Invalid metrics | Reject NaN barycentre, infinite mass and negative elapsed time before touching existing file | Passed; previous report preserved |
+| Disabled collisions | 40 bodies, 3 steps, 500 samples/step, threshold 0 | 1500 attempts, 0 merges, 40 active; mass and barycentre match final states |
+| Merging and repeatability | Same baseline with threshold 100; fresh initialisation for repeat | 39 merges, 1 active; mass conserved; reports identical after excluding measured elapsed time |
+| Zero samples | Same baseline, samples 0 | 0 attempts/valid/merges, 40 active; summary matches final states |
+
+The integration baseline uses size 10 AU, dt 1000 seconds and seed 2406. Each summary is checked against independently accumulated final body data, ignoring retired bodies. Floating-point mass/barycentre checks use relative/absolute tolerance 1e-12. Seeded report comparisons hold the output path and experiment name fixed and exclude only elapsed time.
+
+Executable checks also passed:
+
+- Original 200-body, 20-step baseline: exit 0, 20 PPM frames, non-empty MP4, complete 19-column CSV. Counts were 0 attempts/valid/merges and 200 active. Total mass was approximately 4e29 kg; final barycentre approximately (-1.98495, -0.0526317, 0) AU. The tracked `baseline.csv` is this actual Linux run.
+- Two high-collision CLI runs: 40 bodies, 3 steps, size 10, dt 1000, threshold 100, 500 samples, seed 2406. Each reported 1500 attempts, 39 valid, 39 merged and 1 active. Numeric report fields matched exactly apart from elapsed time; filenames/experiment names differed by design.
+- `--output missing/result.csv`: exit 1 with `Cannot open CSV output`; no successful-completion message.
+- `--bodies -1`: still rejected with exit 1.
+
+### Output semantics and limits
+
+The CSV records one completed experiment per file and replaces any existing file at that path. Use distinct paths for separate experiments. The column order is fixed. Elapsed time includes simulation and PPM rendering, but excludes initialisation, CSV writing and FFmpeg. `completed` is simulation/report status, not video status. Exceptions prevent a completed row for failed simulations or invalid metrics; a write failure may leave a partial file and is reported with exit code 1.
+
+These are integration/regression checks, not the final three-threshold/two-body-count assessment matrix. Runtime comparisons, initial/final centre-of-mass movement and visual interpretation still need the controlled experiments. The small-system initialisation issue recorded above also remains open.
+
+### Repeat on Windows
+
+Pull the update, reload CMake, select `ReportingTests` and run with no arguments. Expected final line: `PASS: 10 reporting test cases`, exit 0. Temporary output is cleaned up and FFmpeg is not required. Then run the original Galaxy baseline and inspect `baseline.csv`; it should have a header plus one data row with 19 columns, `active_bodies=200` and `status=completed`.

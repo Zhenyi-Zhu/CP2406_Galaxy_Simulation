@@ -53,13 +53,13 @@ I addressed an input-validation issue: conversion functions could accept a numer
 | `--seed 4294967296` | Reject uint32 overflow | `value out of range for --seed`; exit 1 | Pass (Windows) |
 | `--output --steps 2` | Detect missing output value | `missing value for --output`; exit 1 | Pass (Windows) |
 | `--help` | Help, no simulation, exit 0 | Expanded help and exit 0 | Pass (Windows) |
-| Hand-computed pair and collision edge/sampling tests | Conserved state, correct boundaries, bounded loop | 18 cases passed in the Linux test environment | Pass (Linux, 29 October); my Windows check pending |
+| Hand-computed pair and collision edge/sampling tests | Conserved state, correct boundaries, bounded loop | 18 cases passed in Linux and in my Windows/CLion run; Windows exit 0 | Pass (Linux and Windows, 29 October); screenshot at 18:57:34 |
 
 ### 6. Generative AI and External Help Log
 
 | Tool / person | My purpose or question | Suggestions I used or rejected | How I checked / changed them |
 |---|---|---|---|
-| ChatGPT/Codex | I sought brainstorming, technical advice, explanations, and grammar and formatting help. I also used generated/revised code and tests. | I incorporated help with setup, validation, collision implementation, testing and documentation. | I ran the configuration tests and selected CLI cases in Windows. I keep the tool-run Linux results separate, and my Windows collision check is still pending. |
+| ChatGPT/Codex | I sought brainstorming, technical advice, explanations, and grammar and formatting help. I also used generated/revised code and tests. | I incorporated help with setup, validation, collision implementation, testing and documentation. | I ran the configuration tests and selected CLI cases in Windows. I keep the tool-run Linux results separate, and I ran all 18 collision cases successfully in Windows on 29 October. |
 
 ### 7. Weekly Reflection and Next Step
 

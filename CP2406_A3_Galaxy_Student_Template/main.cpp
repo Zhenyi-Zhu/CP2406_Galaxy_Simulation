@@ -55,13 +55,22 @@ int main(int argc, char** argv)
 
         writeExperimentCsv(
             config.outputCsv,
-            "baseline",
+            std::filesystem::path(config.outputCsv).stem().string(),
             config,
             result);
 
         std::cout
             << "Created " << config.steps
-            << " frames in images/.\n";
+            << " frames in images/.\n"
+            << "Collisions: attempted=" << result.collisions.attemptedPairs
+            << ", valid=" << result.collisions.validPairs
+            << ", merged=" << result.collisions.mergedPairs << '\n'
+            << "Active bodies: " << result.activeBodies << '\n'
+            << "Total mass (kg): " << result.totalMass << '\n'
+            << "Barycentre (AU): (" << result.barycentre.x
+            << ", " << result.barycentre.y << ", " << result.barycentre.z << ")\n"
+            << "Elapsed (simulation + frames, ms): " << result.elapsedMs << '\n'
+            << "Created " << config.outputCsv << '\n' << std::flush;
 
         if (createVideo())
         {
@@ -73,7 +82,7 @@ int main(int argc, char** argv)
                 << "Frames were created, but FFmpeg was not found or failed.\n";
         }
 
-        std::cout << "Completed baseline run\n";
+        std::cout << "Completed experiment run\n";
         return 0;
     }
     catch (const HelpRequested&)

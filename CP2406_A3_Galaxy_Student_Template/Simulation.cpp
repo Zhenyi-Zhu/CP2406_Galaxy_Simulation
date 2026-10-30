@@ -138,6 +138,7 @@ void calculateSummary(
     long double weightedX = 0;
     long double weightedY = 0;
     long double weightedZ = 0;
+    result.activeBodies = 0;
 
     for (const body& currentBody : bodies)
     {
@@ -146,16 +147,18 @@ void calculateSummary(
             continue;
         }
 
-        totalMass += currentBody.mass;
+        ++result.activeBodies;
+        const long double mass = currentBody.mass;
+        totalMass += mass;
         weightedX +=
-            currentBody.mass * currentBody.position.x;
+            mass * currentBody.position.x;
         weightedY +=
-            currentBody.mass * currentBody.position.y;
+            mass * currentBody.position.y;
         weightedZ +=
-            currentBody.mass * currentBody.position.z;
+            mass * currentBody.position.z;
     }
 
-    result.activeBodies = result.collisions.activeBodies;
+    result.collisions.activeBodies = result.activeBodies;
     result.totalMass = static_cast<double>(totalMass);
 
     if (totalMass > 0.0)

@@ -40,13 +40,13 @@ All candidate values are calculated and checked before either input changes. Inv
 
 Code evidence: `Collisions.cpp`, `checkAndMergeCollision`; `Simulation.cpp`, `simulateOneStep`; `tests/CollisionTests.cpp`, `handCalculatedMerge` and `conservationAndStableStorage`.
 
-Hand check: masses 2 and 3; positions (0,0,0) and (2,4,6); velocities (1,2,3) and (-1,4,1). Expected survivor mass 5, position (1.2,2.4,3.6), velocity (-0.2,3.2,1.8); retired mass 0. The Linux test produced these values. I still need to verify the collision tests in Windows.
+Hand check: masses 2 and 3; positions (0,0,0) and (2,4,6); velocities (1,2,3) and (-1,4,1). Expected survivor mass 5, position (1.2,2.4,3.6), velocity (-0.2,3.2,1.8); retired mass 0. Both the Linux test and my Windows/CLion run on 29 October produced these values. All 18 Windows collision cases passed with exit code 0.
 
 ## 7. Reproducible Randomness
 
 I use `std::mt19937 generator(seed)` as a local random engine and `std::uniform_int_distribution<std::size_t>` to map its output to valid vector indices. Recreating the engine and copying the same starting bodies makes repeated passes comparable without depending on shared global random state. The same seed and inputs are expected to repeat on the same compiler/standard-library setup; the distribution mapping need not be identical across different implementations.
 
-Evidence from repeated run: `seededRepetition` uses two fresh copies, threshold 0.5, 2000 attempts and seed 2406. Linux/GCC produced 2000 attempts, 101 valid pairs, 3 merges and 2 active bodies in both runs, with exactly equal body states. Elapsed wall-clock time is excluded from equality comparisons. The full assessment experiment matrix remains to be completed.
+Evidence from repeated run: `seededRepetition` uses two fresh copies, threshold 0.5, 2000 attempts and seed 2406. Linux/GCC and my Windows run each produced 2000 attempts, 101 valid pairs, 3 merges and 2 active bodies in both local runs, with exactly equal body states. Elapsed wall-clock time is excluded from equality comparisons. The full assessment experiment matrix remains to be completed.
 
 ## 8. Refactoring Summary
 
@@ -54,19 +54,19 @@ I retained the responsibility separation already present in the supplied starter
 
 - Simulation responsibilities: `Simulation.cpp` initialises bodies, builds the tree, advances a step and calculates summary metrics.
 - Renderer responsibilities: `Renderer.cpp` writes PPM snapshots.
-- CsvReporter responsibilities: `CsvReporter.cpp` owns CSV output, but its placeholder row still needs replacement with the required experiment fields.
-- Other changes completed: `SimulationConfig.cpp` now isolates integer/real conversion and validation helpers; `main.cpp` handles the dedicated `HelpRequested` signal separately from actual failures; `Collisions.cpp` implements merge and sampling behind the existing header interface. Separate test executables exercise configuration and collision behaviour without running the renderer or FFmpeg.
+- CsvReporter responsibilities: `CsvReporter.cpp` owns the complete 19-column CSV schema, text escaping, numeric formatting and output-error detection. It receives configuration and results, without running physics or rendering.
+- Other changes completed: `SimulationConfig.cpp` now isolates integer/real conversion and validation helpers; `main.cpp` handles the dedicated `HelpRequested` signal separately from actual failures; `Collisions.cpp` implements merge and sampling behind the existing header interface. Separate configuration/collision test executables do not run the renderer or FFmpeg. `ReportingTests` additionally exercises real simulation summaries and temporary PPM output, without FFmpeg. In `calculateSummary`, I count active bodies from final states and promote mass before weighted-coordinate multiplication; `main.cpp` remains the coordinator and prints the returned metrics.
 
 ## 9. Testing Evidence
 
 | Test | Purpose | Input/setup | Expected result | Actual result | Pass/fail and code location |
 |---|---|---|---|---|---|
 | Zero or negative parameter | Reject invalid CLI settings | `--bodies -1`; config cases include zero steps/size/dt | Clear error; no simulation | Windows error for bodies and exit 1; 142 config checks passed | Pass; `SimulationConfig.cpp`, `tests/ConfigTests.cpp`; see `TESTING.md` |
-| Zero collision threshold | Check documented disabled mode | Two coincident bodies of masses 2 and 3; threshold 0 | No merge; masses unchanged | Linux test matched | Pass (Linux); `zeroThreshold` |
-| Exact-threshold distance | Check inclusive positive boundary | Positions (0,0,0), (3,4,0); threshold 5 | Merge | Linux test merged | Pass (Linux); `exactThreshold` |
-| Retired body | Prevent repeat use of transferred mass | Pair with mass 0 or -1, either argument order | False; no mutation | Linux test matched | Pass (Linux); `retiredBodies` |
-| Deterministic seeded run | Repeat outcomes on the same build | Fresh fixture copies, seed 2406, 2000 attempts | Equal statistics and states | Linux: 2000/101/3/2 in both runs | Pass (Linux); `seededRepetition` |
-| Hand-calculated merge | Verify conserved quantities | The two-body example in section 6 | Mass 5 and calculated position/velocity | Linux values matched | Pass (Linux); `handCalculatedMerge` |
+| Zero collision threshold | Check documented disabled mode | Two coincident bodies of masses 2 and 3; threshold 0 | No merge; masses unchanged | Linux and Windows tests matched | Pass (Linux and Windows); `zeroThreshold` |
+| Exact-threshold distance | Check inclusive positive boundary | Positions (0,0,0), (3,4,0); threshold 5 | Merge | Linux and Windows tests merged | Pass (Linux and Windows); `exactThreshold` |
+| Retired body | Prevent repeat use of transferred mass | Pair with mass 0 or -1, either argument order | False; no mutation | Linux and Windows tests matched | Pass (Linux and Windows); `retiredBodies` |
+| Deterministic seeded run | Repeat outcomes on the same build | Fresh fixture copies, seed 2406, 2000 attempts | Equal statistics and states | Linux and Windows: 2000/101/3/2 in each pair of runs | Pass (Linux and Windows); `seededRepetition` |
+| Hand-calculated merge | Verify conserved quantities | The two-body example in section 6 | Mass 5 and calculated position/velocity | Linux and Windows values matched | Pass (Linux and Windows); `handCalculatedMerge` |
 
 ## 10. Challenge and Resolution
 
@@ -81,8 +81,8 @@ Option A — Generative AI was used.
 
 - Tools: I used ChatGPT/Codex.
 - Purpose: I used ChatGPT/Codex for brainstorming, technical suggestions, explanations, and grammar and formatting improvements. I also used it to generate and revise parts of the code, tests and documentation.
-- Parts affected: The assistance covered CMake configuration, argument parsing and validation, help handling, collision merging and sampling, test cases, and documentation drafts.
-- Verification: I ran the configuration tests and selected CLI cases in Windows/CLion. I also used the separate Linux build and test results produced through ChatGPT/Codex, as identified in my test records. I have not yet recorded Windows verification of the collision update.
+- Parts affected: The assistance covered CMake configuration, argument parsing and validation, help handling, collision merging and sampling, summary calculation, CSV reporting, test cases, and documentation drafts.
+- Verification: I ran the configuration tests and selected CLI cases in Windows/CLion. I also used the separate Linux build and test results produced through ChatGPT/Codex, as identified in my test records. I ran all 18 collision cases successfully in Windows on 29 October. The 30 October reporting changes passed the Linux checks; my Windows reporting verification is pending.
 - Changes I made: 
 - How I demonstrated understanding: 
 

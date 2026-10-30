@@ -1,6 +1,6 @@
 # CP2406 Galaxy Simulation
 
-I am developing this project from the lecturer-provided Galaxy starter template. The program supports validated configuration, seeded collision sampling and safe body merging.
+I am developing this project from the lecturer-provided Galaxy starter template. The program supports validated configuration, seeded collision sampling, safe body merging and complete experiment CSV summaries.
 
 ## Build and run on Windows
 
@@ -16,7 +16,7 @@ For the initial baseline run, use these program arguments:
 --bodies 200 --system-size 50 --steps 20 --dt 1024000 --collision-threshold 0 --collision-samples 0 --seed 2406 --output baseline.csv
 ```
 
-This run disables collision sampling. The template produces 20 PPM frames in `images/` and a placeholder `baseline.csv`. If FFmpeg is available, it also creates `galaxy.mp4`. At 30 frames per second, the video lasts approximately 0.67 seconds.
+This run disables collision sampling. The program produces 20 PPM frames in `images/` and a `baseline.csv` containing the configuration and measured results. If FFmpeg is available, it also creates `galaxy.mp4`. At 30 frames per second, the video lasts approximately 0.67 seconds.
 
 ## FFmpeg setup used for the baseline
 
@@ -69,13 +69,35 @@ Integer arguments accept decimal digits only. Repeated options use the last succ
 - Positive thresholds include exact-boundary distances; threshold zero disables merging and zero samples skips sampling.
 - Preserved mass, centre-of-mass position and linear momentum during merging; retained vector slots and cleared retired state. Acceleration is mass-weighted for the following integration update.
 - I incorporated the `CollisionTests` suite. Linux verification completed successfully. All 18 focused cases passed, including fixed-seed repetition and conservation. The existing 142 configuration checks also passed.
-- The Linux 40-body integration checks verified repeatability and conserved mass with merging enabled and disabled. My Windows verification of this collision update remains pending.
+- The Linux 40-body integration checks verified repeatability and conserved mass with merging enabled and disabled. I ran `CollisionTests` in Windows/CLion on 29 October: all 18 cases passed with exit code 0. The seed-2406 demonstration reported 2000 attempts, 101 valid pairs, 3 merges and 2 active bodies in both runs.
 
 ## Run collision tests
 
 Reload CMake, select `CollisionTests` and run without arguments. Expected final line: `PASS: 18 collision test cases`. CTest also runs this suite. See [collision test evidence](CP2406_A3_Galaxy_Student_Template/COLLISION_TESTING.md) for rules, inputs, expected/actual results and environment limits.
 
 The seeded engine/distribution repeats for the same starting data and build. Exact random index sequences are not promised across different standard-library implementations.
+
+## Development record — 30 October 2026
+
+- I incorporated the complete CSV reporter and console statistics, replacing the placeholder row.
+- I retained deterministic column order, decimal points independent of locale, full double precision and proper quoting of text fields. Output failures now propagate to the normal error handler.
+- I updated the final summary to count active bodies directly and promote mass before weighted-position multiplication.
+- Linux/GCC 13.3 Release verification passed all three CTest suites: 142 configuration checks, 18 collision cases and 10 reporting cases. The baseline and repeated high-collision CLI runs also passed. My Windows verification of this reporting update is pending.
+
+## Experiment output
+
+Each run replaces the selected `--output` file with a header and one completed-experiment row. Use a different filename for each experiment to preserve comparisons. The experiment name comes from the output filename without its extension.
+
+The 19 columns contain the experiment name; body count, system size, steps, dt, collision threshold, samples and seed; output path; elapsed milliseconds; attempted/valid/merged pairs; final active count, total mass and barycentre x/y/z; and status.
+
+- Collision counts are totals across all simulation steps. Samples is the requested attempt count **per step**.
+- Positions and system/threshold sizes are in AU, mass in kg and dt in seconds.
+- `elapsed_ms` includes simulation, summary calculation and PPM output. It excludes initialisation, CSV writing and FFmpeg conversion; it is not a pure collision benchmark.
+- `completed` describes a completed simulation report, not video conversion. An unavailable FFmpeg still leaves the CSV and frames; an output-file failure exits with code 1.
+- Seeded comparisons exclude elapsed time and, when different output filenames are used, experiment name/output path. Exact repeatability applies within the same build/standard library.
+- The tracked `baseline.csv` is the actual Linux/GCC verification output from 30 October; timings will vary on another run.
+
+Reload CMake and run `ReportingTests` without arguments. Expected final line: `PASS: 10 reporting test cases`. It uses temporary files and frames, cleans them up and does not need FFmpeg. See [the reporting test record](CP2406_A3_Galaxy_Student_Template/TESTING.md#reporting-verification--30-october-2026).
 
 ## Assessment documents
 
@@ -84,4 +106,4 @@ The seeded engine/distribution repeats for the same starting data and build. Exa
 
 ## Next development step
 
-I will verify the collision update in Windows, complete experiment CSV/statistics, and run controlled comparisons. I will review initialisation for system sizes below the starter's fixed 0.1 AU inner radius, then finish my code review, journal and 3–5 minute demonstration.
+I will verify the reporting update in Windows and run the controlled comparison matrix (at least three thresholds and two body counts, plus one repeated seeded configuration). I will review initialisation for system sizes below the starter's fixed 0.1 AU inner radius, then finish my code review, journal and 3–5 minute demonstration.

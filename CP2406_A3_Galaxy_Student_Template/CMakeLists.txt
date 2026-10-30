@@ -25,4 +25,10 @@ if(BUILD_TESTING)
     target_include_directories(CollisionTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
     add_test(NAME collision_behaviour COMMAND CollisionTests)
     set_tests_properties(collision_behaviour PROPERTIES TIMEOUT 10)
+    add_executable(ReportingTests tests/ReportingTests.cpp CsvReporter.cpp
+            Simulation.cpp SimulationConfig.cpp Collisions.cpp Bhtree.cpp
+            Octant.cpp Renderer.cpp)
+    target_include_directories(ReportingTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+    add_test(NAME experiment_reporting COMMAND ReportingTests)
+    set_tests_properties(experiment_reporting PROPERTIES TIMEOUT 30)
 endif()

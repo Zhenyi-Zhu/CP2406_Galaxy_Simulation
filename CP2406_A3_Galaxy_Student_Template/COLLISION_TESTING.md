@@ -12,7 +12,7 @@
 
 ## Automated pair/pass tests
 
-Source: `tests/CollisionTests.cpp`. These checks ran in Linux/GCC 13.3 with C++20. I still need to verify the collision update in my Windows/CLion environment. Tests throw on failure and remain effective in Release builds.
+Source: `tests/CollisionTests.cpp`. These checks ran in Linux/GCC 13.3 with C++20. I also ran all 18 cases successfully in Windows/CLion on 29 October, with exit code 0. Tests throw on failure and remain effective in Release builds.
 
 | Case | Input / purpose | Expected | Actual |
 |---|---|---|---|
@@ -49,14 +49,12 @@ A temporary driver called the real `initialiseBodies` and `runExperiment` functi
 - Repeated threshold-100 run: exact match for collision counts, active count, total mass, barycentre and every body state; timings excluded.
 - Threshold 0: 1500 attempts, no merges, 40 active bodies, total mass conserved.
 
-These are integration checks, not the final controlled experiment matrix. Complete CSV fields and the required three thresholds/two body counts are still future work.
+These are integration checks, not the final controlled experiment matrix. Complete CSV fields were added on 30 October. The required three-threshold/two-body-count comparison matrix remains to be completed.
 
-## Local verification
+## Windows verification — 29 October 2026
 
-For my Windows verification, I will pull the update, reload CMake, select `CollisionTests`, and run without program arguments. I expect the final line:
+I ran `CollisionTests.exe` in Windows/CLion. My console screenshot shows all 18 cases passing and exit code 0. The hand-calculated result was mass 5, position (1.2,2.4,3.6), velocity (-0.2,3.2,1.8), retired mass 0. The repeated seed-2406 test reported attempts 2000, valid 101, merged 3 and active 2; both runs were identical.
 
-```text
-PASS: 18 collision test cases
-```
+Evidence: my screenshot dated 29 October 2026, 18:57:34. This confirms the collision suite on Windows; it does not establish Windows verification of the reporting changes added the following day.
 
-The valid-pair count in the printed seed demonstration may differ between standard libraries; each local repeated run must match itself. I will also confirm that `ConfigTests` still reports 142 checks and record my actual Windows output. I can use terminal output as evidence without taking screenshots.
+To repeat, reload CMake, select `CollisionTests` and run without arguments. The expected final line is `PASS: 18 collision test cases`. Valid-pair counts may differ across standard libraries; each local repeated run must match itself.
