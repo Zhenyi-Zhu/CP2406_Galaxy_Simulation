@@ -95,7 +95,7 @@ The 19 columns contain the experiment name; body count, system size, steps, dt, 
 - `elapsed_ms` includes simulation, summary calculation and PPM output. It excludes initialization, CSV writing and FFmpeg conversion; it is not a pure collision benchmark.
 - `completed` describes a completed simulation report, not video conversion. An unavailable FFmpeg still leaves the CSV and frames; an output-file failure exits with code 1.
 - Seeded comparisons exclude elapsed time and, when different output filenames are used, experiment name/output path. Exact repeatability applies within the same build/standard library.
-- - The tracked `baseline.csv` contains my Windows/CLion baseline result from 30 October, with elapsed time 35.5432 ms. Timings vary between runs.
+- The tracked `baseline.csv` contains my Windows/CLion baseline result from 30 October, with elapsed time 35.5432 ms. Timings vary between runs.
 
 Reload CMake and run `ReportingTests` without arguments. Expected final line: `PASS: 10 reporting test cases`. It uses temporary files and frames, cleans them up and does not need FFmpeg. See [the reporting test record](CP2406_A3_Galaxy_Student_Template/TESTING.md#reporting-verification--30-october-2026).
 

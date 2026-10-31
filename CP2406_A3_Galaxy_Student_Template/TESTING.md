@@ -67,7 +67,7 @@ Environment: Linux, GCC 13.3, C++20, CMake 4.4.4, Release, `-Wall -Wextra -Wpeda
 
 Source: `tests/ReportingTests.cpp`. Tests use explicit exceptions, including in Release builds.
 
-| Case | Expected | Actual (Linux) |is this actual Linux run
+| Case | Expected | Actual (Linux) |
 |---|---|---|
 | Known configuration and results | Exact 19-column schema, one header/row, every metric in its column | Passed |
 | Locale and precision | Decimal point despite a comma-decimal global locale; adjacent doubles round-trip | Passed |
@@ -93,7 +93,7 @@ Executable checks also passed:
 
 The CSV records one completed experiment per file and replaces any existing file at that path. Use distinct paths for separate experiments. The column order is fixed. Elapsed time includes simulation and PPM rendering, but excludes initialization, CSV writing and FFmpeg. `completed` is simulation/report status, not video status. Exceptions prevent a completed row for failed simulations or invalid metrics; a write failure may leave a partial file and is reported with exit code 1.
 
-The controlled matrix was completed on 31 October; see experiment_matrix.csv and the comparison in README. Initial-to-final barycentre analysis, visual comparison and the small-system initialization issue remain open., not the final three-threshold/two-body-count assessment matrix. Runtime comparisons, initial/final centre-of-mass movement and visual interpretation still need the controlled experiments. The small-system initialization issue recorded above also remains open.
+The controlled matrix was completed on 31 October; see experiment_matrix.csv and the comparison in README. Initial-to-final barycentre analysis, visual comparison and the small-system initialization issue remain open.
 
 ### Repeat on Windows
 
