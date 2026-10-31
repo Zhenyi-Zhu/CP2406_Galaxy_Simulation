@@ -82,7 +82,7 @@ The seeded engine/distribution repeats for the same starting data and build. Exa
 - I incorporated the complete CSV reporter and console statistics, replacing the placeholder row.
 - I retained deterministic column order, decimal points independent of locale, full double precision and proper quoting of text fields. Output failures now propagate to the normal error handler.
 - I updated the final summary to count active bodies directly and promote mass before weighted-position multiplication.
-- Linux/GCC 13.3 Release verification passed all three CTest suites: 142 configuration checks, 18 collision cases and 10 reporting cases. The baseline and repeated high-collision CLI runs also passed. My Windows verification of this reporting update is pending.
+- Linux/GCC 13.3 Release verification passed all three CTest suites: 142 configuration checks, 18 collision cases and 10 reporting cases. The baseline and repeated high-collision CLI runs also passed. I ran ReportingTests in Windows/CLion on 30 October: all 10 cases passed with exit code 0. I also ran the baseline successfully and checked its complete 19-column CSV.
 
 ## Experiment output
 
@@ -92,10 +92,10 @@ The 19 columns contain the experiment name; body count, system size, steps, dt, 
 
 - Collision counts are totals across all simulation steps. Samples is the requested attempt count **per step**.
 - Positions and system/threshold sizes are in AU, mass in kg and dt in seconds.
-- `elapsed_ms` includes simulation, summary calculation and PPM output. It excludes initialisation, CSV writing and FFmpeg conversion; it is not a pure collision benchmark.
+- `elapsed_ms` includes simulation, summary calculation and PPM output. It excludes initialization, CSV writing and FFmpeg conversion; it is not a pure collision benchmark.
 - `completed` describes a completed simulation report, not video conversion. An unavailable FFmpeg still leaves the CSV and frames; an output-file failure exits with code 1.
 - Seeded comparisons exclude elapsed time and, when different output filenames are used, experiment name/output path. Exact repeatability applies within the same build/standard library.
-- The tracked `baseline.csv` is the actual Linux/GCC verification output from 30 October; timings will vary on another run.
+- - The tracked `baseline.csv` contains my Windows/CLion baseline result from 30 October, with elapsed time 35.5432 ms. Timings vary between runs.
 
 Reload CMake and run `ReportingTests` without arguments. Expected final line: `PASS: 10 reporting test cases`. It uses temporary files and frames, cleans them up and does not need FFmpeg. See [the reporting test record](CP2406_A3_Galaxy_Student_Template/TESTING.md#reporting-verification--30-october-2026).
 
@@ -132,5 +132,4 @@ I combined the seven original CSV files into `CP2406_A3_Galaxy_Student_Template/
 
 ## Next development step
 
-I will verify the reporting update in Windows and run the controlled comparison matrix (at least three thresholds and two body counts, plus one repeated seeded configuration). I will review initialisation for system sizes below the starter's fixed 0.1 AU inner radius, then finish my code review, journal and 3–5 minute demonstration.
-
+I have completed the Windows reporting checks and the three-threshold/two-body-count experiment matrix, including a repeated seeded run. Next, I will investigate a third parameter while keeping the other settings fixed, record initial-to-final barycentre movement, and compare the visual output. I will also review initialization for system sizes below 0.1 AU and complete my code review, journal and demonstration video.

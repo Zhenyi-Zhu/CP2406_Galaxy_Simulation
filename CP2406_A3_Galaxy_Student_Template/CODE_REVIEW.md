@@ -46,7 +46,7 @@ Hand check: masses 2 and 3; positions (0,0,0) and (2,4,6); velocities (1,2,3) an
 
 I use `std::mt19937 generator(seed)` as a local random engine and `std::uniform_int_distribution<std::size_t>` to map its output to valid vector indices. Recreating the engine and copying the same starting bodies makes repeated passes comparable without depending on shared global random state. The same seed and inputs are expected to repeat on the same compiler/standard-library setup; the distribution mapping need not be identical across different implementations.
 
-Evidence from repeated run: `seededRepetition` uses two fresh copies, threshold 0.5, 2000 attempts and seed 2406. Linux/GCC and my Windows run each produced 2000 attempts, 101 valid pairs, 3 merges and 2 active bodies in both local runs, with exactly equal body states. Elapsed wall-clock time is excluded from equality comparisons. The full assessment experiment matrix remains to be completed.
+Evidence from repeated run: `seededRepetition` uses two fresh copies, threshold 0.5, 2000 attempts and seed 2406. Linux/GCC and my Windows run each produced 2000 attempts, 101 valid pairs, 3 merges and 2 active bodies in both local runs, with exactly equal body states. Elapsed wall-clock time is excluded from equality comparisons. I completed the three-threshold/two-body-count matrix and a repeated seeded configuration on 31 October. The results are recorded in experiment_matrix.csv and discussed in README.
 
 ## 8. Refactoring Summary
 
@@ -82,7 +82,7 @@ Option A — Generative AI was used.
 - Tools: I used ChatGPT/Codex.
 - Purpose: I used ChatGPT/Codex for brainstorming, technical suggestions, explanations, and grammar and formatting improvements. I also used it to generate and revise parts of the code, tests and documentation.
 - Parts affected: The assistance covered CMake configuration, argument parsing and validation, help handling, collision merging and sampling, summary calculation, CSV reporting, test cases, and documentation drafts.
-- Verification: I ran the configuration tests and selected CLI cases in Windows/CLion. I also used the separate Linux build and test results produced through ChatGPT/Codex, as identified in my test records. I ran all 18 collision cases successfully in Windows on 29 October. The 30 October reporting changes passed the Linux checks; my Windows reporting verification is pending.
+- Verification: I ran the configuration tests and selected CLI cases in Windows/CLion. I also used the separate Linux build and test results produced through ChatGPT/Codex, as identified in my test records. I ran all 18 collision cases successfully in Windows on 29 October. The 30 October reporting changes passed the Linux checks. I also ran all 10 reporting cases successfully in Windows on 30 October and checked the baseline CSV.
 - Changes I made: 
 - How I demonstrated understanding: 
 
