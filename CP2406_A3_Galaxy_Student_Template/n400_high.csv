@@ -1,0 +1,2 @@
+experiment,bodies,system_size_au,steps,dt_seconds,collision_threshold_au,collision_samples,seed,output_file,elapsed_ms,attempted_pairs,valid_pairs,merged_pairs,active_bodies,total_mass_kg,barycentre_x_au,barycentre_y_au,barycentre_z_au,status
+n400_high,400,50,20,1024000,1,1000,2406,n400_high.csv,60.126800000000003,20000,19372,10,390,4.0000000000000004e+29,-1.8163143328613445,-0.87083248074610686,0,completed

@@ -99,6 +99,32 @@ The 19 columns contain the experiment name; body count, system size, steps, dt, 
 
 Reload CMake and run `ReportingTests` without arguments. Expected final line: `PASS: 10 reporting test cases`. It uses temporary files and frames, cleans them up and does not need FFmpeg. See [the reporting test record](CP2406_A3_Galaxy_Student_Template/TESTING.md#reporting-verification--30-october-2026).
 
+## Controlled experiments — 31 October 2026
+
+I compared 200 and 400 bodies using collision thresholds of 0, 0.01 and 1 AU. I kept the system size at 50 AU, steps at 20, dt at 1024000 seconds, collision samples at 1000 per step and seed at 2406.
+
+| Bodies | Threshold (AU) | Merges | Active bodies | Elapsed (ms) |
+|---|---:|---:|---:|---:|
+| 200 | 0 | 0 | 200 | 42.8484 |
+| 200 | 0.01 | 0 | 200 | 40.2563 |
+| 200 | 1 | 10 | 190 | 43.5389 |
+| 400 | 0 | 0 | 400 | 59.5266 |
+| 400 | 0.01 | 0 | 400 | 53.7487 |
+| 400 | 1 | 10 | 390 | 60.1268 |
+| 400 (repeat) | 1 | 10 | 390 | 63.9249 |
+
+### Findings
+
+- Every run completed 20000 sampling attempts.
+- Threshold 0 disabled merging. Threshold 0.01 allowed merging, but no sampled pair merged in these runs.
+- Threshold 1 produced 10 merges for each body count. Each merge reduced the active-body count by one.
+- All runs reported approximately 4e29 kg total mass, consistent with the fixed initial total mass.
+- At each body count, the disabled and 0.01 AU runs had identical final barycentres. The 1 AU runs showed small differences from their corresponding disabled runs.
+- Repeating the 400-body, 1 AU configuration reproduced all reported simulation results exactly. Only the experiment name, output filename and elapsed time differed.
+- The 400-body runs took longer in these measurements. These are single-run timings that include simulation and frame output, so they do not establish a precise performance trend.
+
+I combined the seven original CSV files into `CP2406_A3_Galaxy_Student_Template/experiment_matrix.csv`, sorted by experiment name and seed. Initial barycentres were not recorded in these CSV files, so these results compare final positions rather than measure initial-to-final movement.
+
 ## Assessment documents
 
 - [Code review — Appendix A working draft](CP2406_A3_Galaxy_Student_Template/CODE_REVIEW.md)
@@ -107,3 +133,4 @@ Reload CMake and run `ReportingTests` without arguments. Expected final line: `P
 ## Next development step
 
 I will verify the reporting update in Windows and run the controlled comparison matrix (at least three thresholds and two body counts, plus one repeated seeded configuration). I will review initialisation for system sizes below the starter's fixed 0.1 AU inner radius, then finish my code review, journal and 3–5 minute demonstration.
+
