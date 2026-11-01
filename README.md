@@ -125,6 +125,22 @@ I compared 200 and 400 bodies using collision thresholds of 0, 0.01 and 1 AU. I 
 
 I combined the seven original CSV files into `CP2406_A3_Galaxy_Student_Template/experiment_matrix.csv`, sorted by experiment name and seed. Initial barycentres were not recorded in these CSV files, so these results compare final positions rather than measure initial-to-final movement.
 
+## Collision sampling comparison — 1 November 2026
+
+I varied the collision samples per step while keeping the body count at 200, system size at 50 AU, steps at 20, timestep at 1024000 seconds, collision threshold at 1 AU, and seed at 2406. I reused the 1000-sample result from my earlier experiment as the reference.
+
+| Samples per step | Attempted pairs | Valid pairs | Merged pairs | Active bodies | Elapsed time (ms) |
+|---|---:|---:|---:|---:|---:|
+| 500 | 10000 | 9639 | 6 | 194 | 33.4245 |
+| 1000 | 20000 | 18611 | 10 | 190 | 43.5389 |
+| 2000 | 40000 | 36192 | 13 | 187 | 39.3373 |
+
+In these runs, increasing the sampling budget resulted in more merges. All three runs completed successfully and reported the same total mass of approximately 4 × 10^29 kg. The active body count matched the initial count minus the number of merges.
+
+Elapsed time did not increase consistently with the sampling budget. These are single-run measurements, so I cannot draw a reliable performance conclusion from them.
+
+The combined results are stored in `CP2406_A3_Galaxy_Student_Template/sampling_comparison.csv`.
+
 ## Assessment documents
 
 - [Code review — Appendix A working draft](CP2406_A3_Galaxy_Student_Template/CODE_REVIEW.md)
@@ -132,4 +148,6 @@ I combined the seven original CSV files into `CP2406_A3_Galaxy_Student_Template/
 
 ## Next development step
 
-I have completed the Windows reporting checks and the three-threshold/two-body-count experiment matrix, including a repeated seeded run. Next, I will investigate a third parameter while keeping the other settings fixed, record initial-to-final barycentre movement, and compare the visual output. I will also review initialization for system sizes below 0.1 AU and complete my code review, journal and demonstration video.
+I have completed the Windows reporting checks, the three-threshold/two-body-count experiment matrix, and a repeated seeded run. I have also investigated collision samples per step as a third parameter while keeping the other settings fixed.
+
+Next, I will record initial-to-final barycentre movement and compare the visual output. I will also review initialization for system sizes below 0.1 AU and complete my code review, journal and demonstration video.
