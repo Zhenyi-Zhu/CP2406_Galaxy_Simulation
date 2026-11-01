@@ -12,7 +12,7 @@ Code evidence: `Bhtree.cpp`, `Bhtree::singleInteract`, `target->accel.x += facto
 
 ## 3. Octree Child Selection
 
-I traced how `Bhtree::insertIntoChild` tests child regions in the order UNW, UNE, USW, USE, DNW, DNE and DSW, then falls back to DSE. `Octant::contains` uses inclusive comparisons on all three axes. A point on a shared boundary can therefore belong to several children, and the first matching branch wins. At the exact parent centre, UNW is the first match. In the DSE fallback, `insert` still performs its own containment check.
+I traced how `Bhtree::insertIntoChild` tests child regions in the order UNW, UNE, USW, USE, DNW, DNE and DSW, then falls back to DSE. `Octant::contains` uses inclusive comparisons on all three axes. A point on a shared boundary can therefore belong to several children, and the first matching branch wins. At the exact parent center, UNW is the first match. In the DSE fallback, `insert` still performs its own containment check.
 
 Code evidence: `Bhtree.cpp`, `Bhtree::insertIntoChild`; `Octant.cpp`, `Octant::contains` and `makeChild`. The original tree and force calculations have not been redesigned.
 
@@ -32,7 +32,7 @@ Code evidence: `Collisions.cpp`, `sampleAndMergeCollisions`; `tests/CollisionTes
 
 ## 6. Conservation During Merge
 
-I combine the original masses as `totalMass`. The survivor receives position and velocity weighted by `a.mass / totalMass` and `b.mass / totalMass`. These implement the centre-of-mass and momentum equations; multiplying the new velocity by the combined mass recovers the original total momentum, up to floating-point rounding. The second body is reset to `body{}`, so its transferred mass is not counted again. The vector is not resized or erased, keeping indices and references stable throughout the pass.
+I combine the original masses as `totalMass`. The survivor receives position and velocity weighted by `a.mass / totalMass` and `b.mass / totalMass`. These implement the center-of-mass and momentum equations; multiplying the new velocity by the combined mass recovers the original total momentum, up to floating-point rounding. The second body is reset to `body{}`, so its transferred mass is not counted again. The vector is not resized or erased, keeping indices and references stable throughout the pass.
 
 Acceleration is also mass-weighted because `Simulation.cpp` applies the already-calculated acceleration after the collision pass. Keeping only the first body's acceleration would discard the second body's contribution to the subsequent velocity update. This is a step-integration choice, not a claim of exact physical accuracy.
 
@@ -79,12 +79,12 @@ I retained the responsibility separation already present in the supplied starter
 
 Option A — Generative AI was used.
 
-- Tools: I used ChatGPT/Codex.
-- Purpose: I used ChatGPT/Codex for brainstorming, technical suggestions, explanations, and grammar and formatting improvements. I also used it to generate and revise parts of the code, tests and documentation.
-- Parts affected: The assistance covered CMake configuration, argument parsing and validation, help handling, collision merging and sampling, summary calculation, CSV reporting, test cases, and documentation drafts.
-- Verification: I ran the configuration tests and selected CLI cases in Windows/CLion. I also used the separate Linux build and test results produced through ChatGPT/Codex, as identified in my test records. I ran all 18 collision cases successfully in Windows on 29 October. The 30 October reporting changes passed the Linux checks. I also ran all 10 reporting cases successfully in Windows on 30 October and checked the baseline CSV.
-- Changes I made: 
-- How I demonstrated understanding: 
+- Tools: I used ChatGPT.
+- Purpose: I used ChatGPT for brainstorming ideas, correcting grammar, improving formatting, giving suggestions, and fixing some code that I could not work out myself.
+- Parts affected: The wording, grammar and formatting of my written work, and a few parts of the code that were revised with AI help.
+- Verification: I ran and tested the revised code and checked that the results were correct. I reviewed the other suggestions and kept only those I agreed with.
+- Changes I made: I used some of the suggested wording, grammar and formatting changes, and used AI-revised code in places where I could not solve the problem myself.
+- How I demonstrated understanding: I understand the overall work and the suggestions I accepted
 
 ## 12. Final Student Declaration
 

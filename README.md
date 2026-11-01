@@ -67,7 +67,7 @@ Integer arguments accept decimal digits only. Repeated options use the last succ
 
 - I incorporated implementations of `checkAndMergeCollision` and attempt-bounded `sampleAndMergeCollisions`.
 - Positive thresholds include exact-boundary distances; threshold zero disables merging and zero samples skips sampling.
-- Preserved mass, centre-of-mass position and linear momentum during merging; retained vector slots and cleared retired state. Acceleration is mass-weighted for the following integration update.
+- Preserved mass, center-of-mass position and linear momentum during merging; retained vector slots and cleared retired state. Acceleration is mass-weighted for the following integration update.
 - I incorporated the `CollisionTests` suite. Linux verification completed successfully. All 18 focused cases passed, including fixed-seed repetition and conservation. The existing 142 configuration checks also passed.
 - The Linux 40-body integration checks verified repeatability and conserved mass with merging enabled and disabled. I ran `CollisionTests` in Windows/CLion on 29 October: all 18 cases passed with exit code 0. The seed-2406 demonstration reported 2000 attempts, 101 valid pairs, 3 merges and 2 active bodies in both runs.
 
