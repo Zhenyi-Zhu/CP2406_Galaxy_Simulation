@@ -16,6 +16,9 @@ struct ExperimentResult
     double totalMass{};
     vec3 barycentre{};
     double elapsedMs{};
+
+    double initialTotalMass{};
+    vec3 initialBarycentre{};
 };
 
 std::vector<body> initialiseBodies(const SimulationConfig& config);

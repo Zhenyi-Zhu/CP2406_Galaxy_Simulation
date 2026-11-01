@@ -256,8 +256,51 @@ int main()
                 unsampled.collisions.validPairs == 0 &&
                 unsampled.collisions.mergedPairs == 0 && unsampled.activeBodies == 40,
                 "zero-sample integration summary");
-        std::cout << "PASS: zero-sample integration summary\n"
-                  << "PASS: 10 reporting test cases\n";
+        std::cout << "PASS: zero-sample integration summary\n";
+
+        {
+            SimulationConfig initialConfig;
+            initialConfig.bodyCount = 2;
+            initialConfig.systemSizeAU = 10;
+            initialConfig.steps = 1;
+            initialConfig.dtSeconds = 1000;
+            initialConfig.collisionThresholdAU = 0;
+            initialConfig.collisionSamples = 0;
+            initialConfig.seed = 2406;
+
+            std::vector<body> initialBodies(2);
+            initialBodies[0].mass = 2;
+            initialBodies[0].position = {1, 2, 3};
+            initialBodies[0].velocity = {1000000, 0, 0};
+
+            initialBodies[1].mass = 3;
+            initialBodies[1].position = {3, 4, 5};
+            initialBodies[1].velocity = {1000000, 0, 0};
+
+            const auto initialResult = runExperiment(
+                initialBodies,
+                initialConfig,
+                (temporary.path / "initial-summary").string());
+
+            near(initialResult.initialTotalMass, 5,
+                 "initial mass from known bodies");
+            near(initialResult.initialBarycentre.x, 2.2,
+                 "initial barycentre x");
+            near(initialResult.initialBarycentre.y, 3.2,
+                 "initial barycentre y");
+            near(initialResult.initialBarycentre.z, 4.2,
+                 "initial barycentre z");
+
+            checkSummary(initialBodies, initialResult);
+            require(
+                std::abs(initialResult.barycentre.x -
+                         initialResult.initialBarycentre.x) > 1e-6,
+                "final barycentre must differ from saved initial value");
+
+            std::cout << "PASS: initial summary preserved after movement\n";
+        }
+
+        std::cout << "PASS: 11 reporting test cases\n";
         return 0;
     }
     catch (const std::exception& error)

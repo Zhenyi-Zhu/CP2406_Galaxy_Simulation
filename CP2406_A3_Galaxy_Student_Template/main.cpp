@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <iomanip>
 
 namespace
 {
@@ -66,9 +67,23 @@ int main(int argc, char** argv)
             << ", valid=" << result.collisions.validPairs
             << ", merged=" << result.collisions.mergedPairs << '\n'
             << "Active bodies: " << result.activeBodies << '\n'
-            << "Total mass (kg): " << result.totalMass << '\n'
-            << "Barycentre (AU): (" << result.barycentre.x
-            << ", " << result.barycentre.y << ", " << result.barycentre.z << ")\n"
+            << std::setprecision(17)
+            << "Initial total mass (kg): "
+            << result.initialTotalMass << '\n'
+            << "Final total mass (kg): "
+            << result.totalMass << '\n'
+            << "Initial barycentre (AU): ("
+            << result.initialBarycentre.x << ", "
+            << result.initialBarycentre.y << ", "
+            << result.initialBarycentre.z << ")\n"
+            << "Final barycentre (AU): ("
+            << result.barycentre.x << ", "
+            << result.barycentre.y << ", "
+            << result.barycentre.z << ")\n"
+            << "Barycentre displacement (AU): ("
+            << (result.barycentre.x - result.initialBarycentre.x) << ", "
+            << (result.barycentre.y - result.initialBarycentre.y) << ", "
+            << (result.barycentre.z - result.initialBarycentre.z) << ")\n"
             << "Elapsed (simulation + frames, ms): " << result.elapsedMs << '\n'
             << "Created " << config.outputCsv << '\n' << std::flush;
 

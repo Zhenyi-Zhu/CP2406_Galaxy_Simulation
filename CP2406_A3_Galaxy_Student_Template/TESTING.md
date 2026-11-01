@@ -112,3 +112,21 @@ I completed six configurations covering 200/400 bodies and thresholds of 0/0.01/
 Both repeated runs reported 20000 attempts, 19372 valid pairs, 10 merges and 390 active bodies. Total mass and all reported barycentre coordinates matched exactly. Elapsed time was excluded from the reproducibility comparison.
 
 The seven original CSV files and experiment_matrix.csv preserve these results. The README contains the comparison. Third-parameter investigation, initial-to-final barycentre analysis and visual comparison remain to be completed.
+
+## Initial summary verification — 1 November 2026
+
+I reran the configuration, collision and reporting tests on Windows
+using CLion. All 142 configuration checks, 18 collision test cases
+and the existing 10 reporting test cases passed.
+
+I then added a reporting test using two bodies with masses of 2 and 3
+and positions of (1, 2, 3) and (3, 4, 5). Their expected initial total
+mass is 5 and their mass-weighted initial barycentre is (2.2, 3.2, 4.2).
+
+The test checks that these initial values remain stored after the
+simulation moves the bodies, and independently checks the final summary.
+All 11 reporting test cases passed with exit code 0.
+
+I also compared initial and final barycentres in two Windows runs.
+The results are recorded in BARYCENTRE_COMPARISON.md.
+

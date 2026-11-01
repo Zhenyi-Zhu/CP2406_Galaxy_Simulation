@@ -229,6 +229,12 @@ ExperimentResult runExperiment(
         std::chrono::steady_clock::now();
 
     ExperimentResult result;
+
+    ExperimentResult initialSummary;
+    calculateSummary(bodies, initialSummary);
+    result.initialTotalMass = initialSummary.totalMass;
+    result.initialBarycentre = initialSummary.barycentre;
+
     std::filesystem::create_directories(framesDirectory);
 
     for (int step = 0; step < config.steps; ++step)
