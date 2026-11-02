@@ -143,8 +143,8 @@ The combined results are stored in `CP2406_A3_Galaxy_Student_Template/sampling_c
 
 ## Assessment documents
 
-- [Code review — Appendix A working draft](CP2406_A3_Galaxy_Student_Template/CODE_REVIEW.md)
-- [Development journal — Appendix B working draft](CP2406_A3_Galaxy_Student_Template/PROJECT_JOURNAL.md)
+- [Code review — Appendix A working draft](CODE_REVIEW.md)
+- [Development journal — Appendix B working draft](PROJECT_JOURNAL.md)
 
 ## Next development step
 
