@@ -97,7 +97,7 @@ The 19 columns contain the experiment name; body count, system size, steps, dt, 
 - Seeded comparisons exclude elapsed time and, when different output filenames are used, experiment name/output path. Exact repeatability applies within the same build/standard library.
 - The tracked `baseline.csv` contains my Windows/CLion baseline result from 30 October, with elapsed time 35.5432 ms. Timings vary between runs.
 
-Reload CMake and run `ReportingTests` without arguments. Expected final line: `PASS: 10 reporting test cases`. It uses temporary files and frames, cleans them up and does not need FFmpeg. See [the reporting test record](CP2406_A3_Galaxy_Student_Template/TESTING.md#reporting-verification--30-october-2026).
+Reload CMake and run `ReportingTests` without arguments. Expected final line: `PASS: 12 reporting test cases`. It uses temporary files and frames, cleans them up and does not need FFmpeg. See [the reporting test record](CP2406_A3_Galaxy_Student_Template/TESTING.md#reporting-verification--30-october-2026).
 
 ## Controlled experiments — 31 October 2026
 
@@ -148,6 +148,7 @@ The combined results are stored in `CP2406_A3_Galaxy_Student_Template/sampling_c
 
 ## Next development step
 
-I have completed the Windows reporting checks, the three-threshold/two-body-count experiment matrix, and a repeated seeded run. I have also investigated collision samples per step as a third parameter while keeping the other settings fixed.
-
-Next, I will record initial-to-final barycentre movement and compare the visual output. I will also review initialization for system sizes below 0.1 AU and complete my code review, journal and demonstration video.
+I have completed the Windows reporting checks, the three-threshold/two-body-count experiment matrix, a repeated seeded run, and a controlled comparison of collision sampling budgets.
+I have also recorded initial-to-final barycentre movement and compared runs with collisions enabled and disabled. The results are documented in [BARYCENTRE_COMPARISON.md](CP2406_A3_Galaxy_Student_Template/BARYCENTRE_COMPARISON.md).
+On 2 November, I corrected the initialization radius range for small systems. The inner radius is now `min(0.1, systemSizeAU * 0.5)`. All 12 reporting tests passed in Windows, including checks at system sizes of 0.05, 0.1, 0.2 and 50 AU. A short 0.05 AU simulation also completed successfully; its results are stored in `CP2406_A3_Galaxy_Student_Template/small_system_check.csv`.
+Next, I will compare the visual output, complete the remaining code review and journal sections, prepare the demonstration video, and verify a clean build before packaging the submission.

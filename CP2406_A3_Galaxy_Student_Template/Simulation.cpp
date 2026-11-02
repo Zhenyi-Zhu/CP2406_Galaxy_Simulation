@@ -178,8 +178,11 @@ std::vector<body> initialiseBodies(
     std::vector<body> bodies(config.bodyCount);
     std::mt19937 randomNumberGenerator(config.seed);
 
+    const double innerRadiusAU =
+        std::min(0.1, config.systemSizeAU * 0.5);
+
     std::uniform_real_distribution<double> radius(
-        0.1,
+        innerRadiusAU,
         config.systemSizeAU);
 
     std::uniform_real_distribution<double> angle(

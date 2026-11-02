@@ -130,3 +130,39 @@ All 11 reporting test cases passed with exit code 0.
 I also compared initial and final barycentres in two Windows runs.
 The results are recorded in BARYCENTRE_COMPARISON.md.
 
+## Small-system initialization — 2 November 2026
+
+The previous initialization used a fixed inner radius of 0.1 AU.
+For an accepted system size below 0.1 AU, this made the random
+distribution's lower bound greater than its upper bound.
+
+I changed the inner radius to:
+
+`min(0.1, systemSizeAU * 0.5)`
+
+This scales the inner radius for small systems while retaining the
+previous 0.1 AU lower bound for system sizes of at least 0.2 AU.
+
+I added an initialization test covering system sizes of 0.05, 0.1,
+0.2 and 50 AU. It checks body count, radial bounds, the xy-plane
+constraint, finite velocities and finite positive masses.
+All 12 reporting test cases passed in Windows/CLion with exit code 0.
+
+I also ran the following integration check:
+
+`--bodies 40 --system-size 0.05 --steps 3 --dt 1 --collision-threshold 0 --collision-samples 0 --seed 2406 --output small_system_check.csv`
+
+Observed results:
+- 3 frames and an MP4 were generated.
+- Attempted, valid and merged pairs were all zero.
+- All 40 bodies remained active.
+- Initial and final total mass were both 4.0000000000000004e+29 kg.
+- Final barycentre was
+  (-0.0059894823067871538, 0.0063507963753202338, 0) AU.
+- The CSV status was completed.
+
+This verifies the tested initialization ranges and a short small-system
+run; it does not establish long-term numerical stability.
+
+
+

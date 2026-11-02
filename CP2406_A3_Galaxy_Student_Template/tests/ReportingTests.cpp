@@ -300,7 +300,65 @@ int main()
             std::cout << "PASS: initial summary preserved after movement\n";
         }
 
-        std::cout << "PASS: 11 reporting test cases\n";
+        {
+            struct RadiusCase
+            {
+                double systemSizeAU;
+                double expectedInnerAU;
+            };
+
+            const RadiusCase radiusCases[] = {
+                {0.05, 0.025},
+                {0.1, 0.05},
+                {0.2, 0.1},
+                {50.0, 0.1}
+            };
+
+            for (const auto& radiusCase : radiusCases)
+            {
+                SimulationConfig radiusConfig;
+                radiusConfig.bodyCount = 200;
+                radiusConfig.systemSizeAU = radiusCase.systemSizeAU;
+                radiusConfig.seed = 2406;
+
+                const auto generated = initialiseBodies(radiusConfig);
+                require(generated.size() == radiusConfig.bodyCount,
+                        "initial body count");
+
+                for (const auto& current : generated)
+                {
+                    const double distance = std::hypot(
+                        current.position.x,
+                        current.position.y,
+                        current.position.z);
+                    const double tolerance =
+                        1e-12 * radiusCase.systemSizeAU;
+
+                    require(
+                        std::isfinite(distance) &&
+                        distance >= radiusCase.expectedInnerAU - tolerance &&
+                        distance <= radiusCase.systemSizeAU + tolerance,
+                        "initial radius within configured bounds");
+
+                    near(current.position.z, 0,
+                         "initial bodies lie in the xy plane");
+
+                    require(
+                        std::isfinite(current.velocity.x) &&
+                        std::isfinite(current.velocity.y) &&
+                        std::isfinite(current.velocity.z),
+                        "finite initial velocity");
+
+                    require(
+                        std::isfinite(current.mass) && current.mass > 0,
+                        "finite positive initial mass");
+                }
+            }
+
+            std::cout << "PASS: initialization radius bounds\n";
+        }
+
+        std::cout << "PASS: 12 reporting test cases\n";
         return 0;
     }
     catch (const std::exception& error)
