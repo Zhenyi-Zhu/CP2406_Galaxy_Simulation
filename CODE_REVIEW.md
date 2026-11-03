@@ -92,6 +92,21 @@ initialization, using temporary output directories without FFmpeg.
 
 These changes extend the supplied structure. I did not redesign the original Barnes–Hut force calculation.
 
+On 3 November, I strengthened two existing components.
+
+In Renderer.cpp, I added finite-value and positive-view checks,
+clipped off-screen coordinates before converting them to integer
+pixels, and checked file-opening and writing failures. Invalid
+input is rejected before opening the output file, preserving any
+existing image. Finite off-screen bodies are skipped because they
+remain valid simulation data.
+
+In Bhtree.h, I explicitly deleted copy and move operations.
+Each node owns and deletes its child nodes, so a shallow copy
+would create multiple owners of the same pointers and risk double
+deletion. The tree copies input body values; it does not take
+ownership of the caller's body pointer.
+
 ## 9. Testing Evidence
 
 | Test | Purpose | Input/setup | Expected result | Actual result | Pass/fail and code location |
@@ -114,6 +129,19 @@ I also completed the controlled experiment matrix, a repeated seeded
 run, the sampling-budget comparison and the final-frame visual
 comparison. These provide integration evidence alongside the
 automated tests.
+
+On 3 November, all eight RendererTests cases passed on Windows
+with exit code 0. They check actual PPM bytes, boundary clipping,
+retired bodies, invalid input, preservation of existing output,
+deterministic replacement and destination-opening errors.
+
+Four static_assert checks in ReportingTests.cpp verify that
+Bhtree cannot be copied or moved. These checks run at compile
+time and are separate from the runtime test count.
+
+Galaxy and ReportingTests built successfully after the ownership
+change. All 12 reporting cases then passed with exit code 0.
+The dated verification record is in TESTING.md.
 
 Supporting records:
 - [Configuration and reporting tests](CP2406_A3_Galaxy_Student_Template/TESTING.md)

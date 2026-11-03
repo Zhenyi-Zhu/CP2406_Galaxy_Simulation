@@ -207,7 +207,7 @@ Date: 1 November 2026
 
 ## Weekly Journal Entry 3
 
-Week / dates: 2–5 November 2026
+Week / dates: 2– November 2026
 
 Project option: Galaxy Simulation
 
@@ -262,6 +262,19 @@ reused `images/` and `galaxy.mp4`. I saved separate comparison
 files and checked the final PPM hashes. The disabled and rare
 frames matched, while the high-threshold frame differed.
 
+On 3 November, all eight RendererTests cases passed on Windows
+with exit code 0. They check actual PPM bytes, boundary clipping,
+retired bodies, invalid input, preservation of existing output,
+deterministic replacement and destination-opening errors.
+
+Four static_assert checks in ReportingTests.cpp verify that
+Bhtree cannot be copied or moved. These checks run at compile
+time and are separate from the runtime test count.
+
+Galaxy and ReportingTests built successfully after the ownership
+change. All 12 reporting cases then passed with exit code 0.
+The dated verification record is in TESTING.md.
+
 ### 5. Testing Performed
 
 | Test / input | Expected result | Actual result | Outcome |
@@ -272,6 +285,9 @@ frames matched, while the high-threshold frame differed.
 | Final-frame hash comparison | Establish whether saved frames are identical | Disabled and rare hashes matched; high-threshold hash differed | Completed |
 | Galaxy build in `cmake-build-cleancheck` | Compile and link using a fresh build directory | Build completed successfully | Pass |
 | Test suites under CleanCheck | All checks pass with exit code 0 | 142 configuration checks, 18 collision cases and 12 reporting cases passed | Pass |
+| Renderer safety tests | Correct image bytes, clipping and error handling | All 8 cases passed; exit code 0 | Pass |
+| Bhtree ownership restrictions | Copy and move operations unavailable | Four compile-time assertions passed during the ReportingTests build | Pass |
+| Reporting regression after ownership changes | Existing integration behaviour remains correct | All 12 cases passed; exit code 0 | Pass |
 
 These checks cover the tested initialization ranges and short runs.
 They do not establish long-term numerical stability. The clean
@@ -307,7 +323,7 @@ My declaration: I confirm that this entry accurately records my
 progress and assistance received.
 
 Student initials / signature: Zhenyi Zhu
-Date: 5 November 2026
+Date:  November 2026
 
 ## Final Project Reflection
 
