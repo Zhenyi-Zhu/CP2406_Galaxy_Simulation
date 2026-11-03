@@ -34,9 +34,9 @@ with focused tests before running larger experiments.
 
 ### 3. Evidence of Progress
 
-- [27 October: Windows build and baseline](https://github.com/Zhenyi-Zhu/CP2406_Galaxy/commit/0fbab45e6a3790e183c4a52ba547187f78e65fb4).
-- [28 October: configuration implementation and tests](https://github.com/Zhenyi-Zhu/CP2406_Galaxy/commit/46f49cfa46961187962af4d790e746e28d7f9758).
-- [28 October: Windows verification record](https://github.com/Zhenyi-Zhu/CP2406_Galaxy/commit/aa45f53e4838e7f4259fd5be0758934265d6007f).
+- [27 October: Windows build and baseline](https://github.com/Zhenyi-Zhu/CP2406_Galaxy_Simulation/commit/0fbab45e6a3790e183c4a52ba547187f78e65fb4).
+- [28 October: configuration implementation and tests](https://github.com/Zhenyi-Zhu/CP2406_Galaxy_Simulation/commit/46f49cfa46961187962af4d790e746e28d7f9758).
+- [28 October: Windows verification record](https://github.com/Zhenyi-Zhu/CP2406_Galaxy_Simulation/commit/aa45f53e4838e7f4259fd5be0758934265d6007f).
 - `TESTING.md`: configuration checks and manual CLI results.
 - `COLLISION_TESTING.md`: collision rules, expected results and
   the successful Windows run on 29 October.
@@ -136,7 +136,7 @@ barycentres and preserve evidence of the results.
 - `BARYCENTRE_COMPARISON.md`: initial and final values for
   collisions enabled and disabled.
 - `TESTING.md`: dated Windows test results.
-- [Commit 7ca51da](https://github.com/Zhenyi-Zhu/CP2406_Galaxy/commit/7ca51da):
+- [Commit 7ca51da](https://github.com/Zhenyi-Zhu/CP2406_Galaxy_Simulation/commit/7ca51da):
   initial summary recording, barycentre comparison and the new test.
 
 ### 4. Problem-Solving Record
@@ -207,49 +207,107 @@ Date: 1 November 2026
 
 ## Weekly Journal Entry 3
 
-Week / dates: [Complete at the next actual checkpoint]
+Week / dates: 2–5 November 2026
 
 Project option: Galaxy Simulation
 
-Checkpoint / task focus: [Complete when work is performed]
+Checkpoint / task focus: Small-system initialization, visual
+comparison, code review and clean build verification.
 
 ### 1. Goals for This Week
 
-[Specific planned functions, features and tests.]
+I planned to investigate initialization for small system sizes,
+compare the visual results of three collision thresholds, update
+my code review and verify the project using a fresh build directory.
 
 ### 2. Development Work Completed
 
-| File / component | Function or area changed | Summary of my changes / assistance |
+| File / component | Function or area changed | Summary of my work |
 |---|---|---|
-| [Complete] | [Complete] | [Complete] |
+| `Simulation.cpp` | Initialization radius | I incorporated an adaptive lower radius so that small positive system sizes have a valid sampling range. |
+| `tests/ReportingTests.cpp` | Initialization checks | I incorporated and ran a test covering system sizes of 0.05, 0.1, 0.2 and 50 AU. |
+| Visual comparison files | Final frames and experiment results | I ran three threshold configurations and saved their CSV reports and final-frame images. |
+| `VISUAL_COMPARISON.md` | Results discussion | I documented the identical disabled/rare frames and the small differences in the high-threshold frame. |
+| `CODE_REVIEW.md` | Architecture, evidence and challenge | I updated the explanations to reflect the current implementation and completed verification. |
+| `TESTING.md` | Clean build record | I recorded the successful CleanCheck build and all three Windows test suites. |
 
 ### 3. Evidence of Progress
 
-Evidence filename / link: [Add at least one dated authentic output, test result, screenshot or saved version and explain it.]
+- [Small-system fix and regression test](https://github.com/Zhenyi-Zhu/CP2406_Galaxy_Simulation/commit/5520e02e9d0088ed0a6e84cb999867097a34b868).
+- [Visual comparison](CP2406_A3_Galaxy_Student_Template/VISUAL_COMPARISON.md):
+  saved final frames and results for three collision thresholds.
+- [Small-system CSV](CP2406_A3_Galaxy_Student_Template/small_system_check.csv):
+  the completed 40-body, 0.05 AU integration run.
+- [Code review update](https://github.com/Zhenyi-Zhu/CP2406_Galaxy_Simulation/commit/a33066a7a6381c3f52583bd6ad80d9274afb693d).
+- [Clean build verification](https://github.com/Zhenyi-Zhu/CP2406_Galaxy_Simulation/commit/437227cfd06034d6fcfe21314be53807f0da9061).
 
 ### 4. Problem-Solving Record
 
-[Problem, investigation, changes and reason for the selected approach.]
+The configuration accepted finite positive system sizes, but
+initialization used a fixed lower radius of 0.1 AU. For a system
+size of 0.05 AU, this lower bound exceeded the upper bound.
+
+I incorporated the expression
+`std::min(0.1, config.systemSizeAU * 0.5)` for the lower radius.
+This gives a range of 0.025–0.05 AU for the small-system check
+while preserving the original 0.1 AU lower bound for systems
+of at least 0.2 AU.
+
+I checked initialization separately from later movement through
+the regression test, then ran a short simulation to verify that
+the configuration completed successfully.
+
+The visual comparison also required care because each simulation
+reused `images/` and `galaxy.mp4`. I saved separate comparison
+files and checked the final PPM hashes. The disabled and rare
+frames matched, while the high-threshold frame differed.
 
 ### 5. Testing Performed
 
-| Test / input | Expected result | Actual result | Pass / fail and action |
+| Test / input | Expected result | Actual result | Outcome |
 |---|---|---|---|
-| [Complete] | [Complete] | [Complete] | [Complete] |
+| Initialization at 0.05, 0.1, 0.2 and 50 AU | Correct body count and radius bounds, finite velocities and positive masses | Initialization checks passed within the 12-case reporting suite | Pass |
+| 40 bodies, 0.05 AU, 3 steps, timestep 1 second, collisions disabled | Successful short run with 40 active bodies | Completed; initial and final reported mass matched; CSV, frames and video generated | Pass |
+| Visual comparison at thresholds 0, 0.01 and 1 AU | Record outcomes with other settings fixed | Observed 0, 0 and 10 merges, leaving 200, 200 and 190 active bodies | Completed |
+| Final-frame hash comparison | Establish whether saved frames are identical | Disabled and rare hashes matched; high-threshold hash differed | Completed |
+| Galaxy build in `cmake-build-cleancheck` | Compile and link using a fresh build directory | Build completed successfully | Pass |
+| Test suites under CleanCheck | All checks pass with exit code 0 | 142 configuration checks, 18 collision cases and 12 reporting cases passed | Pass |
+
+These checks cover the tested initialization ranges and short runs.
+They do not establish long-term numerical stability. The clean
+build check used a new build directory within my working project;
+verification of the final extracted submission ZIP remains pending.
 
 ### 6. Generative AI and External Help Log
 
-| Tool / person | Purpose or question | Suggestion used or rejected | How I checked / changed it |
+| Tool / person | Purpose or question | Suggestions used | How I checked the results |
 |---|---|---|---|
-| [Complete] | [Complete] | [Complete] | [Complete] |
+| ChatGPT | Brainstorming ideas, correcting grammar, improving formatting, and giving suggestions | I used some of the suggested wording, grammar corrections, and formatting changes. | I reviewed all suggestions and kept only those I agreed with. The code, testing and results are my own work. |
 
 ### 7. Weekly Reflection and Next Step
 
-[I will describe what I learned, what I can explain or modify, and my next specific task.]
+The initialization issue showed me that valid command-line input
+must also satisfy assumptions inside the simulation. Checking the
+initial radius directly helped separate initialization behavior
+from movement during later steps.
 
-My declaration: I confirm that this entry accurately records my progress and assistance received.
+I also learned that images can look almost identical even when
+the recorded collision counts differ. I used CSV results and file
+hashes alongside visual inspection, rather than judging collision
+behavior from appearance alone.
 
-Student initials / signature: ____________________    Date: ____________________
+The CleanCheck profile provided evidence that the project could
+build without relying on the existing Debug build cache.
+
+Next, I will complete my final reflection, prepare the narrated
+demonstration and check the contents and buildability of the
+submission ZIP.
+
+My declaration: I confirm that this entry accurately records my
+progress and assistance received.
+
+Student initials / signature: Zhenyi Zhu
+Date: 5 November 2026
 
 ## Final Project Reflection
 
