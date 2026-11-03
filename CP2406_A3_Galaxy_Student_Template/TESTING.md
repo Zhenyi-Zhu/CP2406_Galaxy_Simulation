@@ -180,3 +180,27 @@ three test executables from the CleanCheck build directory:
 
 All three test executables exited with code 0.
 
+## Renderer safety verification — 3 November 2026
+
+I built and ran RendererTests using the CleanCheck CMake profile
+on Windows with CLion and MinGW. All eight renderer test cases
+passed, and the executable exited with code 0.
+
+The tests verified:
+- A complete PPM header and black background for an empty scene.
+- Correct pixels for the centre and exact view boundaries.
+- Clipping of just-outside and extreme finite coordinates.
+- Skipping retired bodies.
+- Rejection of invalid view sizes without creating an output file.
+- Rejection of non-finite active-body data while preserving an existing file.
+- Deterministic replacement without retaining previous image data.
+- Clear errors for missing parent directories and directory destinations.
+
+These tests check actual output bytes and exception behaviour.
+The file-error cases verify failures when opening the destination;
+they do not simulate a disk becoming full during writing.
+
+After the renderer change, I also ran ReportingTests in CleanCheck.
+All 12 reporting test cases passed with exit code 0, including the
+collision integration summaries, seeded repetition, initial-summary
+preservation and initialization radius bounds.
