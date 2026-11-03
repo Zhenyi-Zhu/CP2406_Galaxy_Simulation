@@ -1,5 +1,7 @@
 #include "CsvReporter.h"
+#include "Bhtree.h"
 
+#include <type_traits>
 #include <algorithm>
 #include <chrono>
 #include <cmath>
@@ -12,6 +14,16 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+
+// Ownership restrictions must remain enforced in every build.
+static_assert(!std::is_copy_constructible_v<Bhtree>,
+              "Bhtree must not allow shallow copying");
+static_assert(!std::is_copy_assignable_v<Bhtree>,
+              "Bhtree must not allow shallow copy assignment");
+static_assert(!std::is_move_constructible_v<Bhtree>,
+              "Bhtree must not allow unsafe pointer moves");
+static_assert(!std::is_move_assignable_v<Bhtree>,
+              "Bhtree must not allow unsafe move assignment");
 
 namespace
 {

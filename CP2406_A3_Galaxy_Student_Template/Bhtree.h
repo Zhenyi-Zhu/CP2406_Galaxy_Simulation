@@ -18,6 +18,12 @@ class Bhtree {
 public:
     explicit Bhtree(Octant&& oct);
     ~Bhtree();
+    // Each node exclusively owns its child nodes.
+    // Copying or moving raw owning pointers would duplicate ownership.
+    Bhtree(const Bhtree&) = delete;
+    Bhtree& operator=(const Bhtree&) = delete;
+    Bhtree(Bhtree&&) = delete;
+    Bhtree& operator=(Bhtree&&) = delete;
     [[nodiscard]] const Octant& octant() const { return octy; }
     [[nodiscard]] bool isExternal() const;
     // Insert a body, updating aggregate mass and centre of mass

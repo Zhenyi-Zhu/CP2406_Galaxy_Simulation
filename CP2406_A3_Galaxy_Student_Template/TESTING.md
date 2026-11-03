@@ -161,46 +161,66 @@ Observed results:
   (-0.0059894823067871538, 0.0063507963753202338, 0) AU.
 - The CSV status was completed.
 
-This verifies the tested initialization ranges and a short small-system
-run; it does not establish long-term numerical stability.
+## Clean build and safety verification — 3 November 2026
 
-## Clean build verification — 3 November 2026
+### Environment and initial verification
 
-I configured a separate CLion CMake profile named `CleanCheck`, using
-Debug mode, MinGW, Ninja and `-DBUILD_TESTING=ON`. I used the build
-directory `cmake-build-cleancheck` to verify the project independently
-of the existing Debug build cache.
+I configured a separate CLion CMake profile named `CleanCheck`,
+using Windows, MinGW, Ninja, Debug mode and `-DBUILD_TESTING=ON`.
+Its build directory was `cmake-build-cleancheck`, separate from
+the existing Debug build cache.
 
-The Galaxy target compiled and linked successfully. I then ran all
-three test executables from the CleanCheck build directory:
+Galaxy compiled and linked successfully. Before the safety changes,
+I ran the three existing test executables:
 
-- ConfigTests: 142 configuration checks passed.
-- CollisionTests: 18 collision test cases passed.
-- ReportingTests: 12 reporting test cases passed.
+| Test executable | Observed result | Exit code |
+|---|---|---|
+| ConfigTests | 142 configuration checks passed | 0 |
+| CollisionTests | 18 collision cases passed | 0 |
+| ReportingTests | 12 reporting cases passed | 0 |
 
-All three test executables exited with code 0.
+### Renderer safety changes and tests
 
-## Renderer safety verification — 3 November 2026
+I updated Renderer.cpp to reject invalid view sizes and non-finite
+active-body data, clip finite off-screen coordinates before integer
+conversion, and report file-opening and writing failures.
+Input validation occurs before opening the destination, so invalid
+input does not truncate an existing output file.
 
-I built and ran RendererTests using the CleanCheck CMake profile
-on Windows with CLion and MinGW. All eight renderer test cases
-passed, and the executable exited with code 0.
+I added RendererTests.cpp and registered it with CMake/CTest.
+I ran the executable directly through CLion.
 
-The tests verified:
-- A complete PPM header and black background for an empty scene.
-- Correct pixels for the centre and exact view boundaries.
-- Clipping of just-outside and extreme finite coordinates.
-- Skipping retired bodies.
-- Rejection of invalid view sizes without creating an output file.
-- Rejection of non-finite active-body data while preserving an existing file.
-- Deterministic replacement without retaining previous image data.
-- Clear errors for missing parent directories and directory destinations.
+| Test case | Expected result | Actual result |
+|---|---|---|
+| Empty scene | Complete PPM header and black image | Passed |
+| Centre and exact view boundaries | Correct pixel positions and colours | Passed |
+| Just-outside and extreme finite coordinates | Off-screen bodies are skipped | Passed |
+| Retired bodies | No pixels drawn for retired bodies | Passed |
+| Invalid view sizes | Exception without creating an output file | Passed |
+| Non-finite active-body data | Exception with existing output preserved | Passed |
+| Repeated rendering | Identical bytes for identical input; replacement clears old pixels | Passed |
+| Missing parent or directory destination | File-opening error reported | Passed |
 
-These tests check actual output bytes and exception behaviour.
-The file-error cases verify failures when opening the destination;
-they do not simulate a disk becoming full during writing.
+All eight renderer test cases passed with exit code 0.
+After the renderer change, I also ran ReportingTests; all 12 cases
+passed with exit code 0.
 
-After the renderer change, I also ran ReportingTests in CleanCheck.
-All 12 reporting test cases passed with exit code 0, including the
-collision integration summaries, seeded repetition, initial-summary
-preservation and initialization radius bounds.
+### Tree ownership protection and regression verification
+
+Each Bhtree node owns and deletes its child nodes. Default copying
+would copy the child pointers, creating multiple owners and a risk
+of double deletion.
+
+I explicitly deleted copy construction, copy assignment, move
+construction and move assignment. I added four type-trait
+static_assert checks in ReportingTests.cpp to enforce these
+restrictions at compile time.
+
+I also corrected the insertion comment: the tree copies body values,
+while the caller retains ownership of the supplied body.
+
+After these changes, Galaxy and ReportingTests both compiled and
+linked successfully in CleanCheck. I then ran ReportingTests again;
+all 12 runtime cases passed with exit code 0. The four compile-time
+checks are separate from that runtime test count.
+

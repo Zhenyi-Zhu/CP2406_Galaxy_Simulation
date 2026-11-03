@@ -24,7 +24,7 @@ void Bhtree::insert(body* insertBod) {
     // Discard bodies outside this octant
     if (!octy.contains(insertBod->position)) return;
 
-    // Empty node: take ownership of the first body
+    // Empty node: copy the first body's values; the caller retains ownership.
     if (myBod.mass == 0.0) {
         myBod = *insertBod;
         return;
