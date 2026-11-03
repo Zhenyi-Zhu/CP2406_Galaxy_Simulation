@@ -164,5 +164,19 @@ Observed results:
 This verifies the tested initialization ranges and a short small-system
 run; it does not establish long-term numerical stability.
 
+## Clean build verification — 3 November 2026
 
+I configured a separate CLion CMake profile named `CleanCheck`, using
+Debug mode, MinGW, Ninja and `-DBUILD_TESTING=ON`. I used the build
+directory `cmake-build-cleancheck` to verify the project independently
+of the existing Debug build cache.
+
+The Galaxy target compiled and linked successfully. I then ran all
+three test executables from the CleanCheck build directory:
+
+- ConfigTests: 142 configuration checks passed.
+- CollisionTests: 18 collision test cases passed.
+- ReportingTests: 12 reporting test cases passed.
+
+All three test executables exited with code 0.
 
