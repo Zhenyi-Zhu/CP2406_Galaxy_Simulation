@@ -50,12 +50,47 @@ Evidence from repeated run: `seededRepetition` uses two fresh copies, threshold 
 
 ## 8. Refactoring Summary
 
-I retained the responsibility separation already present in the supplied starter:
+I retained the module separation already present in the starter
+and extended the implementation within those responsibilities.
 
-- Simulation responsibilities: `Simulation.cpp` initialises bodies, builds the tree, advances a step and calculates summary metrics.
-- Renderer responsibilities: `Renderer.cpp` writes PPM snapshots.
-- CsvReporter responsibilities: `CsvReporter.cpp` owns the complete 19-column CSV schema, text escaping, numeric formatting and output-error detection. It receives configuration and results, without running physics or rendering.
-- Other changes completed: `SimulationConfig.cpp` now isolates integer/real conversion and validation helpers; `main.cpp` handles the dedicated `HelpRequested` signal separately from actual failures; `Collisions.cpp` implements merge and sampling behind the existing header interface. Separate configuration/collision test executables do not run the renderer or FFmpeg. `ReportingTests` additionally exercises real simulation summaries and temporary PPM output, without FFmpeg. In `calculateSummary`, I count active bodies from final states and promote mass before weighted-coordinate multiplication; `main.cpp` remains the coordinator and prints the returned metrics.
+- `SimulationConfig.cpp` handles command-line parsing and validation.
+  Integer and floating-point helpers check complete inputs, ranges
+  and finite values. Help requests are handled separately from errors.
+
+- `Collisions.cpp` handles pair merging and bounded sampling.
+  It checks pair eligibility, calculates the merged state before
+  mutation, retires the second body and returns collision statistics.
+
+- `Simulation.cpp` initializes bodies, builds the tree, advances
+  the simulation and calculates summary metrics. Initialization now
+  adapts the inner radius for small systems. The existing
+  `calculateSummary` function is reused before and after the loop
+  to avoid duplicating mass and barycentre calculations.
+
+- `ExperimentResult` in `Simulation.h` carries the collision counts,
+  final summary, elapsed time, initial total mass and initial
+  barycentre. The initial values are preserved separately from
+  the final values.
+
+- `Renderer.cpp` remains responsible for writing PPM snapshots.
+  It does not parse command-line arguments or write CSV reports.
+
+- `CsvReporter.cpp` owns the 19-column CSV schema, text escaping,
+  numeric formatting and output-error handling. It receives the
+  configuration and results without running the simulation.
+  The CSV currently records the final summary; initial values
+  and barycentre displacement are printed in the console.
+
+- `main.cpp` coordinates configuration, frame cleanup, initialization,
+  simulation, reporting and video conversion. It prints the returned
+  metrics and calculates displacement as final minus initial
+  barycentre. It does not implement the force or collision algorithms.
+
+The separate test executables cover configuration, collisions and
+reporting. Reporting tests also exercise simulation summaries and
+initialization, using temporary output directories without FFmpeg.
+
+These changes extend the supplied structure. I did not redesign the original Barnes–Hut force calculation.
 
 ## 9. Testing Evidence
 
@@ -67,13 +102,70 @@ I retained the responsibility separation already present in the supplied starter
 | Retired body | Prevent repeat use of transferred mass | Pair with mass 0 or -1, either argument order | False; no mutation | Linux and Windows tests matched | Pass (Linux and Windows); `retiredBodies` |
 | Deterministic seeded run | Repeat outcomes on the same build | Fresh fixture copies, seed 2406, 2000 attempts | Equal statistics and states | Linux and Windows: 2000/101/3/2 in each pair of runs | Pass (Linux and Windows); `seededRepetition` |
 | Hand-calculated merge | Verify conserved quantities | The two-body example in section 6 | Mass 5 and calculated position/velocity | Linux and Windows values matched | Pass (Linux and Windows); `handCalculatedMerge` |
+| CSV reporting | Verify schema, precision, escaping and error handling | Known values, quoted text, repeated writes and invalid output destinations | Correct 19-column output and clear failures | Reporting checks passed in Windows | Pass; `tests/ReportingTests.cpp`; see `TESTING.md` |
+| Initial summary preservation | Preserve initial values after simulation movement | Two bodies with masses 2 and 3 at (1,2,3) and (3,4,5) | Initial mass 5 and barycentre (2.2,3.2,4.2), retained after movement | Initial values matched; final summary independently checked | Pass (Windows, 1 November); `tests/ReportingTests.cpp` |
+| Initialization radius bounds | Check small-system initialization | 200 bodies at system sizes 0.05, 0.1, 0.2 and 50 AU | Correct count and radial bounds; finite velocities and positive masses | All four configurations passed | Pass (Windows, 2 November); `tests/ReportingTests.cpp` |
+
+My Windows verification includes 142 configuration checks and
+18 collision test cases. After adding initial-summary and radius-bound
+checks, all 12 reporting test cases passed on 2 November.
+
+I also completed the controlled experiment matrix, a repeated seeded
+run, the sampling-budget comparison and the final-frame visual
+comparison. These provide integration evidence alongside the
+automated tests.
+
+Supporting records:
+- [Configuration and reporting tests](CP2406_A3_Galaxy_Student_Template/TESTING.md)
+- [Collision tests](CP2406_A3_Galaxy_Student_Template/COLLISION_TESTING.md)
+- [Experiment matrix](CP2406_A3_Galaxy_Student_Template/experiment_matrix.csv)
+- [Sampling comparison](CP2406_A3_Galaxy_Student_Template/sampling_comparison.csv)
+- [Barycentre comparison](CP2406_A3_Galaxy_Student_Template/BARYCENTRE_COMPARISON.md)
+- [Visual comparison](CP2406_A3_Galaxy_Student_Template/VISUAL_COMPARISON.md)
 
 ## 10. Challenge and Resolution
 
-- Challenge encountered: 
-- How I investigated it: 
-- Solution implemented: 
-- Evidence that the solution works:
+### Challenge encountered
+
+The configuration accepted any finite, positive system size, but
+`initialiseBodies` used a fixed inner radius of 0.1 AU. For a system
+size such as 0.05 AU, the random distribution's lower bound was
+greater than its upper bound. Valid command-line input therefore
+did not guarantee a valid initialization range.
+
+### How I investigated it
+
+I reviewed the radius distribution in `Simulation.cpp` and compared
+its bounds with the values accepted by configuration validation.
+I separated initialization checks from the simulation so that
+later movement would not affect the radius measurements.
+
+### Solution implemented
+
+I changed the inner radius to
+`std::min(0.1, config.systemSizeAU * 0.5)`.
+
+For a 0.05 AU system, this gives a sampling range of 0.025–0.05 AU.
+System sizes of at least 0.2 AU retain the original 0.1 AU inner
+radius, including the 50 AU configuration used in my experiments.
+
+### Evidence that the solution works
+
+I added a test covering system sizes of 0.05, 0.1, 0.2 and 50 AU.
+It checks the body count, initial radial bounds, xy-plane positions,
+finite velocities and finite positive masses.
+
+All 12 reporting test cases passed in Windows/CLion on 2 November
+with exit code 0. A separate 40-body simulation at 0.05 AU completed
+three steps with a one-second timestep. It retained all 40 active
+bodies, reported equal initial and final total mass, and generated
+frames, a CSV report and a video.
+
+Evidence:
+- [Test record](CP2406_A3_Galaxy_Student_Template/TESTING.md#small-system-initialization--2-november-2026)
+- [Small-system results](CP2406_A3_Galaxy_Student_Template/small_system_check.csv)
+
+These checks verify the tested ranges and a short integration run, rather than long-term numerical stability.
 
 ## 11. Generative AI Use Statement
 
