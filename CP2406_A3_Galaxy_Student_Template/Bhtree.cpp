@@ -1,6 +1,7 @@
 #include "Bhtree.h"
 #include <cmath>
 #include <utility>
+#include <stdexcept>
 
 Bhtree::Bhtree(Octant &&oct) : octy(std::move(oct)) {
 }
@@ -29,14 +30,27 @@ void Bhtree::insert(body* insertBod) {
         myBod = *insertBod;
         return;
     }
-
-    // Leaf node (external) with one body: subdivide and insert both the
-    // existing occupant and the incoming body into children, then update
-    // the aggregate mass/centre of mass once.
+    // Coincident bodies share a gravitational point in this tree only.
+    // Keep the exact position; subdivision cannot separate equal positions.
+    // The simulation's body vector and collision statistics are unchanged.
+    if (isExternal() &&
+        myBod.position.x == insertBod->position.x &&
+        myBod.position.y == insertBod->position.y &&
+        myBod.position.z == insertBod->position.z) {
+        const double totalMass = myBod.mass + insertBod->mass;
+        if (!std::isfinite(totalMass)) {
+            throw std::overflow_error("Coincident tree-node mass overflow");
+        }
+        myBod.mass = totalMass;
+        return;
+        }
+    // Leaf node with one position: subdivide and insert both the
+    // existing point mass and the incoming body into children, then update
+    // the aggregate mass/center of mass once.
     if (isExternal()) {
         // Preserve the existing occupant's properties before they are overwritten
         body old = myBod;
-        // Compute new aggregate mass and centre of mass (in AU)
+        // Compute new aggregate mass and center of mass (in AU)
         const double totalMass = old.mass + insertBod->mass;
         myBod.position.x = (old.position.x * old.mass + insertBod->position.x * insertBod->mass) / totalMass;
         myBod.position.y = (old.position.y * old.mass + insertBod->position.y * insertBod->mass) / totalMass;
@@ -49,7 +63,7 @@ void Bhtree::insert(body* insertBod) {
         return;
     }
 
-    // Internal node: update aggregate mass and centre of mass, then pass
+    // Internal node: update aggregate mass and center of mass, then pass
     // the body down to the appropriate child
     const double totalMass = myBod.mass + insertBod->mass;
     myBod.position.x = (myBod.position.x * myBod.mass + insertBod->position.x * insertBod->mass) / totalMass;
@@ -97,7 +111,8 @@ void Bhtree::singleInteract(body *target, const body *other, bool singlePart) {
     // r = target - other (meters)
     vec3 rM = (target->position - other->position) * AU;
     const double r2 = rM.x * rM.x + rM.y * rM.y + rM.z * rM.z;
-    if (singlePart && r2 == 0.0) return; // skip self-force on leaf
+    // Self and exactly coincident sources contribute zero softened force.
+    if (singlePart && r2 == 0.0) return;
     const double denom = std::sqrt(r2 + SOFTENING_M * SOFTENING_M);
     const double invDenom3 = 1.0 / (denom * denom * denom);
     const double factor = -G * other->mass * invDenom3; // s^-2 per meter

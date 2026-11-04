@@ -283,5 +283,36 @@ smoke-test working directory with these arguments:
 | Frame output | Three PPM frames | Three frames generated |
 | Missing FFmpeg | Report video failure while preserving simulation output | Warning displayed; CSV and frames retained |
 
+## Coincident-body tree regression — 4 November 2026
 
+The final review identified an insertion problem in the inherited
+Barnes–Hut tree. Two active bodies at exactly the same position
+could repeatedly enter the same child, causing unbounded subdivision.
+A separate Linux reproduction crashed before the correction.
+
+I incorporated a leaf-node check for exactly equal x, y and z
+coordinates. The tree retains their shared position and combines
+their gravitational mass without subdividing. The combined mass
+is checked for overflow before updating the node.
+
+This aggregation affects only the tree representation. It does not
+modify the simulation's body vector, retire a body or increment
+collision counts. A later body at a different position can still
+cause the leaf to subdivide.
+
+I added a reporting regression case covering:
+
+- Insertion of coincident bodies without subdivision.
+- Zero softened force at the shared position.
+- The combined gravitational effect on a third body.
+- The external body's gravitational effect on a coincident body.
+- Preservation of the original simulation-body masses.
+- A two-step simulation with collisions disabled, retaining two
+  active bodies, zero merges, total mass and the expected barycentre.
+
+I ran ReportingTests.exe in the Windows CleanCheck build.
+All 13 reporting test cases passed with exit code 0.
+
+This check covers exactly coincident positions. It does not establish
+safe tree depth or numerical stability for every extreme configuration.
 

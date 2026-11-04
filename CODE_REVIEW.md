@@ -86,8 +86,8 @@ and extended the implementation within those responsibilities.
   metrics and calculates displacement as final minus initial
   barycentre. It does not implement the force or collision algorithms.
 
-The separate test executables cover configuration, collisions and
-reporting. Reporting tests also exercise simulation summaries and
+The separate test executables cover configuration, collisions,
+reporting and rendering. Reporting tests also exercise simulation summaries and
 initialization, using temporary output directories without FFmpeg.
 
 These changes extend the supplied structure. I did not redesign the original Barnes–Hut force calculation.
@@ -107,6 +107,16 @@ would create multiple owners of the same pointers and risk double
 deletion. The tree copies input body values; it does not take
 ownership of the caller's body pointer.
 
+On 4 November, I incorporated a further tree-insertion correction.
+Exactly coincident bodies cannot be separated by recursive spatial
+subdivision. A leaf now retains their exact shared position and
+combines their gravitational mass, rejecting an overflowing sum.
+
+This is a tree representation decision rather than a collision merge:
+the simulation bodies remain independent, and collision statistics
+are unchanged. If a body at a different position is subsequently
+inserted, the leaf can subdivide normally.
+
 ## 9. Testing Evidence
 
 | Test | Purpose | Input/setup | Expected result | Actual result | Pass/fail and code location |
@@ -120,6 +130,7 @@ ownership of the caller's body pointer.
 | CSV reporting | Verify schema, precision, escaping and error handling | Known values, quoted text, repeated writes and invalid output destinations | Correct 19-column output and clear failures | Reporting checks passed in Windows | Pass; `tests/ReportingTests.cpp`; see `TESTING.md` |
 | Initial summary preservation | Preserve initial values after simulation movement | Two bodies with masses 2 and 3 at (1,2,3) and (3,4,5) | Initial mass 5 and barycentre (2.2,3.2,4.2), retained after movement | Initial values matched; final summary independently checked | Pass (Windows, 1 November); `tests/ReportingTests.cpp` |
 | Initialization radius bounds | Check small-system initialization | 200 bodies at system sizes 0.05, 0.1, 0.2 and 50 AU | Correct count and radial bounds; finite velocities and positive masses | All four configurations passed | Pass (Windows, 2 November); `tests/ReportingTests.cpp` |
+| Coincident-body tree and integration | Prevent repeated subdivision and preserve simulation bodies | Two coincident bodies, a third external body, and a two-step run with collisions disabled | Correct gravitational contribution, unchanged body masses, two active bodies and zero merges | New case passed; all 13 reporting cases passed with exit code 0 | Pass (Windows, 4 November); `tests/ReportingTests.cpp` |
 
 My Windows verification includes 142 configuration checks and
 18 collision test cases. After adding initial-summary and radius-bound
@@ -210,10 +221,10 @@ Option A — Generative AI was used.
 
 I will check each statement after completing my final review:
 
-- [ ] The explanations are written in my own words.
-- [ ] The code references relate to my submitted project.
-- [ ] The reported tests were performed on my implementation.
-- [ ] I can explain and modify the submitted code.
-- [ ] Any generative AI use has been declared accurately.
+- [✔] The explanations are written in my own words.
+- [✔] The code references relate to my submitted project.
+- [✔] The reported tests were performed on my implementation.
+- [✔] I can explain and modify the submitted code.
+- [✔] Any generative AI use has been declared accurately.
 
-Student name: Zhenyi Zhu    Date:
+Student name: Zhenyi Zhu    Date: 4 November 2026

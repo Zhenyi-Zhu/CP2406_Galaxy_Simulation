@@ -370,7 +370,80 @@ int main()
             std::cout << "PASS: initialization radius bounds\n";
         }
 
-        std::cout << "PASS: 12 reporting test cases\n";
+        {
+            body firstBody{}, secondBody{}, thirdBody{};
+            firstBody.mass = 2e20;
+            secondBody.mass = 3e20;
+            thirdBody.mass = 7e20;
+            firstBody.position = {0.25, 0.25, 0.25};
+            secondBody.position = firstBody.position;
+            thirdBody.position = {-0.25, 0.25, 0.25};
+
+            Bhtree tree(Octant(0, 0, 0, 2));
+            tree.insert(&firstBody);
+            tree.insert(&secondBody);
+            require(tree.isExternal(),
+                    "coincident positions need no subdivision");
+
+            tree.interactInTree(&firstBody);
+            require(firstBody.accel.x == 0 &&
+                    firstBody.accel.y == 0 &&
+                    firstBody.accel.z == 0,
+                    "zero force at the shared position");
+
+            tree.insert(&thirdBody);
+            tree.interactInTree(&thirdBody);
+            tree.interactInTree(&firstBody);
+
+            const double distanceM = 0.5 * AU;
+            const double softened = std::sqrt(
+                distanceM * distanceM + SOFTENING_M * SOFTENING_M);
+            const double factor = G * distanceM /
+                (softened * softened * softened);
+
+            near(thirdBody.accel.x / (factor * 5e20), 1,
+                 "external body feels both coincident masses");
+            near(firstBody.accel.x / (-factor * 7e20), 1,
+                 "coincident body feels the external mass");
+
+            require(firstBody.mass == 2e20 &&
+                    secondBody.mass == 3e20 &&
+                    thirdBody.mass == 7e20,
+                    "tree aggregation must not retire simulation bodies");
+
+            SimulationConfig coincidentConfig;
+            coincidentConfig.bodyCount = 2;
+            coincidentConfig.steps = 2;
+            coincidentConfig.dtSeconds = 1;
+            coincidentConfig.collisionThresholdAU = 0;
+            coincidentConfig.collisionSamples = 0;
+
+            firstBody.accel = {};
+            std::vector<body> coincidentBodies{firstBody, secondBody};
+            const auto coincidentResult = runExperiment(
+                coincidentBodies, coincidentConfig,
+                (temporary.path / "coincident").string());
+
+            checkSummary(coincidentBodies, coincidentResult);
+            near(coincidentResult.totalMass, 5e20,
+                 "coincident total mass");
+
+            require(coincidentResult.activeBodies == 2 &&
+                    coincidentResult.collisions.attemptedPairs == 0 &&
+                    coincidentResult.collisions.mergedPairs == 0,
+                    "coincident bodies remain independent when collisions are disabled");
+
+            near(coincidentResult.barycentre.x, 0.25,
+                 "coincident barycentre x");
+            near(coincidentResult.barycentre.y, 0.25,
+                 "coincident barycentre y");
+            near(coincidentResult.barycentre.z, 0.25,
+                 "coincident barycentre z");
+
+            std::cout << "PASS: coincident-body tree and integration\n";
+        }
+
+        std::cout << "PASS: 13 reporting test cases\n";
         return 0;
     }
     catch (const std::exception& error)

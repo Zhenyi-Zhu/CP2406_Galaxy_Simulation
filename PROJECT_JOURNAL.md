@@ -93,8 +93,7 @@ attempts allows it to finish even when collisions are rare or disabled.
 Next, I will verify the complete CSV report and run controlled
 experiments with different collision settings.
 
-My declaration: I confirm that this entry accurately records my
-progress and assistance received.
+My declaration: I confirm that this entry accurately records my progress and assistance received.
 
 Student initials / signature: Zhenyi Zhu
 Date: 29 October 2026
@@ -199,15 +198,14 @@ Next, I will investigate initialization for system sizes below
 0.1 AU, compare the visual output, and continue the code review
 and demonstration preparation.
 
-My declaration: I confirm that this entry accurately records my
-progress and assistance received.
+My declaration: I confirm that this entry accurately records my progress and assistance received.
 
 Student initials / signature: Zhenyi Zhu
 Date: 1 November 2026
 
 ## Weekly Journal Entry 3
 
-Week / dates: 2– November 2026
+Week / dates: 2–4 November 2026
 
 Project option: Galaxy Simulation
 
@@ -229,7 +227,9 @@ my code review and verify the project using a fresh build directory.
 | Visual comparison files | Final frames and experiment results | I ran three threshold configurations and saved their CSV reports and final-frame images. |
 | `VISUAL_COMPARISON.md` | Results discussion | I documented the identical disabled/rare frames and the small differences in the high-threshold frame. |
 | `CODE_REVIEW.md` | Architecture, evidence and challenge | I updated the explanations to reflect the current implementation and completed verification. |
-| `TESTING.md` | Clean build record | I recorded the successful CleanCheck build and all three Windows test suites. |
+| `TESTING.md` | Build and verification records | I recorded all four Windows CTest suites, the extracted-archive verification and the subsequent 13-case reporting regression run. |
+| `Renderer.cpp` and `tests/RendererTests.cpp` | Rendering safety | I incorporated input validation, clipping before integer conversion and output-error checks, then verified all eight renderer cases on Windows. |
+| `Bhtree.h/.cpp` and `tests/ReportingTests.cpp` | Ownership and coincident positions | I incorporated non-copyable ownership and tree-only aggregation for coincident bodies, with compile-time checks and a runtime regression case. |
 
 ### 3. Evidence of Progress
 
@@ -292,6 +292,16 @@ I then ran all four suites through CTest. All passed, with zero
 failures. This showed why checking individual targets alone was
 not enough to verify the complete test configuration.
 
+The final review also identified repeated subdivision when two
+bodies occupied exactly the same position. A separate Linux
+reproduction crashed. I incorporated a leaf-node check that keeps
+the shared position and combines gravitational mass within the tree.
+
+This does not retire simulation bodies or count as a collision.
+The regression test checks the force contribution to a third body
+and a short simulation with collisions disabled. All 13 reporting
+cases passed in my Windows CleanCheck run.
+
 ### 5. Testing Performed
 
 | Test / input | Expected result | Actual result | Outcome |
@@ -306,11 +316,17 @@ not enough to verify the complete test configuration.
 | Bhtree ownership restrictions | Copy and move operations unavailable | Four compile-time assertions passed during the ReportingTests build | Pass |
 | Reporting regression after ownership changes | Existing integration behaviour remains correct | All 12 cases passed; exit code 0 | Pass |
 | Full CTest run on 4 November | All four registered suites pass | 4/4 passed, zero failures; reported time 1.33 seconds | Pass |
+| Extracted archive from commit 77df575 | Build independently of the working repository and pass all registered tests | All 27 build steps completed; CTest passed 4/4 suites in 0.87 seconds | Pass |
+| Extracted-archive smoke run | Produce one completed CSV row and three frames | Exit 0; 40 active bodies; zero collision counts; CSV and three frames created; missing FFmpeg reported separately | Pass for simulation and reporting |
+| Coincident-body regression | Avoid repeated subdivision, preserve gravitational contribution and retain independent simulation bodies | New case passed; all 13 reporting cases passed in Windows with exit code 0 | Pass |
 
-These checks cover the tested initialization ranges and short runs.
-They do not establish long-term numerical stability. The clean
-build check used a new build directory within my working project;
-verification of the final extracted submission ZIP remains pending.
+I also verified an archive exported from commit 77df575 in a separate
+directory. Its fresh build, four CTest suites and simulation smoke
+check passed. FFmpeg was unavailable in that isolated run, so it
+did not verify video conversion.
+
+That archive predates the coincident-body correction. I subsequently
+verified all 13 reporting cases on Windows.
 
 ### 6. Generative AI and External Help Log
 
@@ -337,11 +353,10 @@ Next, I will complete my final reflection, prepare the narrated
 demonstration and check the contents and buildability of the
 submission ZIP.
 
-My declaration: I confirm that this entry accurately records my
-progress and assistance received.
+My declaration: I confirm that this entry accurately records my progress and assistance received.
 
 Student initials / signature: Zhenyi Zhu
-Date:  November 2026
+Date: 4 November 2026
 
 ## Final Project Reflection
 
@@ -349,35 +364,86 @@ Project option: Galaxy Simulation
 
 ### 1. Development Summary
 
-[I will summarize my development work and the assistance I used at the end of the project.]
+I developed the Galaxy project from the supplied starter structure.
+The completed work includes stronger configuration validation,
+bounded collision sampling, mass-weighted merging, complete CSV
+reporting and initial-to-final summary information.
+
+I ran controlled experiments covering two body counts, three
+collision thresholds and three sampling budgets. I also checked
+seeded repetition and compared final-frame images. Later work
+addressed small-system initialization, renderer safety, tree
+ownership and coincident-body insertion.
 
 ### 2. Most Difficult Problem
 
-[I will describe the problem and how I resolved it in my own words.]
+The small-system initialization issue required me to connect
+command-line validation with assumptions inside the simulation.
+A system size of 0.05 AU passed validation, but the original fixed
+inner radius of 0.1 AU exceeded the distribution's upper bound.
+
+The revised lower radius, min(0.1, systemSizeAU * 0.5), gives a
+valid range for the tested small systems while preserving the
+original lower bound for larger systems. I checked initialization
+directly and then ran a short simulation. This showed me why
+valid input alone does not guarantee correct internal behavior.
 
 ### 3. Most Valuable Test
 
-[Identify the test, expected result, actual result and why it was valuable.]
+The coincident-body regression was particularly valuable because
+the existing tests passed without covering this tree-insertion case.
+
+The new test expects coincident positions to remain in one leaf,
+checks their combined gravitational effect on another body, and
+verifies that the original bodies are not retired. It also runs
+two simulation steps with collisions disabled and expects two
+active bodies, zero merges and preserved total mass.
+
+The new case passed on Windows, alongside all 12 existing reporting
+cases. This demonstrated the value of choosing tests from specific
+failure conditions rather than relying only on a passing test count.
 
 ### 4. Code Understanding
 
-[I will identify one function I can explain and modify, including its key decisions.]
+The function I would use to explain the collision implementation is
+checkAndMergeCollision. It rejects self-pairs and retired bodies,
+handles the disabled threshold, validates active-body data and
+checks the distance against a positive inclusive threshold.
+
+For an eligible collision, it calculates the combined mass and
+mass-weighted position, velocity and acceleration before changing
+either body. It updates the survivor and clears the second body
+without erasing a vector element.
+
+The distinction between collision merging and tree aggregation is
+also important: collision merging changes the active simulation
+state, whereas coincident-position aggregation only changes the
+tree's representation for force calculation.
 
 ### 5. Final AI-Use Summary
 
-[I will summarize the tools I used, the work they supported, and how I verified, modified or rejected their output.]
+I used ChatGPT for Brainstorming ideas, correcting grammar, improving formatting, and giving suggestions. 
+I used some of the suggested wording, grammar corrections, and formatting changes.
+I reviewed all suggestions and kept only those I agreed with. The code, testing and results are my own work.
 
 ### 6. Future Improvement
 
-[Explain the next improvement and why it matters.]
+I would next automate the experiment matrix using unique output
+directories and filenames. This would reduce the risk of overwriting
+CSV files, frames or videos and make repeated experiments easier.
+
+I would also use repeated timing measurements before making
+performance claims, and extend tree tests to very close but distinct
+positions and extreme numeric ranges. The current tests do not
+establish correctness or long-term stability for every configuration.
 
 ### Final Submission Check
 
-- [ ] I have completed and dated my journal entries.
-- [ ] I have included evidence relating to the work I describe.
-- [ ] I have accurately recorded the AI and external help I used.
-- [ ] I have verified that my project builds from a clean configuration.
-- [ ] I can explain and modify the submitted code.
-- [ ] I have excluded build folders, caches and unnecessary generated files from my project ZIP.
+- [✔] I have completed and dated my journal entries.
+- [✔] I have included evidence relating to the work I describe.
+- [✔] I have accurately recorded the AI and external help I used.
+- [✔] I have verified that my project builds from a clean configuration.
+- [✔] I can explain and modify the submitted code.
+- [✔] I have excluded build folders, caches and unnecessary generated files from my project ZIP.
 
-Student signature: ____________________    Date: ____________________
+Student signature: Zhenyi Zhu    Date: 4 November 2026
