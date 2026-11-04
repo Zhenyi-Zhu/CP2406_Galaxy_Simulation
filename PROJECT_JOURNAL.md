@@ -240,6 +240,7 @@ my code review and verify the project using a fresh build directory.
   the completed 40-body, 0.05 AU integration run.
 - [Code review update](https://github.com/Zhenyi-Zhu/CP2406_Galaxy_Simulation/commit/a33066a7a6381c3f52583bd6ad80d9274afb693d).
 - [Clean build verification](https://github.com/Zhenyi-Zhu/CP2406_Galaxy_Simulation/commit/437227cfd06034d6fcfe21314be53807f0da9061).
+- [Test-target correction and complete CTest verification](https://github.com/Zhenyi-Zhu/CP2406_Galaxy_Simulation/commit/31208f43dd8c8615b4fc039da441c62a03e3352e).
 
 ### 4. Problem-Solving Record
 
@@ -275,6 +276,22 @@ Galaxy and ReportingTests built successfully after the ownership
 change. All 12 reporting cases then passed with exit code 0.
 The dated verification record is in TESTING.md.
 
+On 4 November, the repository review identified that RendererTests.cpp
+had also been included in the CollisionTests target. Both test files
+define main(), so they need separate executables. I removed the
+renderer test source from CollisionTests and retained its independent
+RendererTests target.
+
+An initial PowerShell build failed without a specific compiler
+diagnostic. RendererTests then compiled and linked successfully
+inside CLion. After adding the MinGW bin directory to the terminal
+PATH, the all-target build reported that no work was required.
+This did not establish the cause of the earlier compilation failure.
+
+I then ran all four suites through CTest. All passed, with zero
+failures. This showed why checking individual targets alone was
+not enough to verify the complete test configuration.
+
 ### 5. Testing Performed
 
 | Test / input | Expected result | Actual result | Outcome |
@@ -288,6 +305,7 @@ The dated verification record is in TESTING.md.
 | Renderer safety tests | Correct image bytes, clipping and error handling | All 8 cases passed; exit code 0 | Pass |
 | Bhtree ownership restrictions | Copy and move operations unavailable | Four compile-time assertions passed during the ReportingTests build | Pass |
 | Reporting regression after ownership changes | Existing integration behaviour remains correct | All 12 cases passed; exit code 0 | Pass |
+| Full CTest run on 4 November | All four registered suites pass | 4/4 passed, zero failures; reported time 1.33 seconds | Pass |
 
 These checks cover the tested initialization ranges and short runs.
 They do not establish long-term numerical stability. The clean

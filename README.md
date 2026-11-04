@@ -141,6 +141,38 @@ Elapsed time did not increase consistently with the sampling budget. These are s
 
 The combined results are stored in `CP2406_A3_Galaxy_Student_Template/sampling_comparison.csv`.
 
+## Current automated test suites
+
+Enable `BUILD_TESTING=ON` in the CMake profile and build all targets.
+The project registers four independent CTest suites:
+
+| Executable | CTest name | Coverage |
+|---|---|---|
+| ConfigTests | configuration_validation | 142 configuration checks |
+| CollisionTests | collision_behaviour | 18 collision cases |
+| ReportingTests | experiment_reporting | 12 reporting and integration cases |
+| RendererTests | renderer_safety | 8 renderer safety cases |
+
+ReportingTests also contains four compile-time assertions that
+Bhtree cannot be copied or moved. These are separate from its
+12 runtime cases.
+
+The test executables do not require FFmpeg. In CLion, I can select
+and run each executable without arguments. With CMake, CTest and
+the configured compiler toolchain available in the terminal, I can
+run the following from the source subfolder:
+```
+cmake -S . -B build -DBUILD_TESTING=ON
+cmake --build build
+ctest --test-dir build --output-on-failure
+```
+For a multi-configuration generator, use `--config Debug` when
+building and `-C Debug` when running CTest.
+
+On 4 November 2026, all four suites passed in my Windows CleanCheck
+build. Full results and verification limits are recorded in
+[TESTING.md](CP2406_A3_Galaxy_Student_Template/TESTING.md).
+
 ## Assessment documents
 
 - [Code review — Appendix A working draft](CODE_REVIEW.md)
@@ -153,4 +185,4 @@ I have also recorded initial-to-final barycentre movement and compared runs with
 On 2 November, I corrected the initialization radius range for small systems. The inner radius is now `min(0.1, systemSizeAU * 0.5)`. All 12 reporting tests passed in Windows, including checks at system sizes of 0.05, 0.1, 0.2 and 50 AU. A short 0.05 AU simulation also completed successfully; its results are stored in `CP2406_A3_Galaxy_Student_Template/small_system_check.csv`.
 I have completed the final-frame visual comparison for collision thresholds of 0, 0.01 and 1 AU. The disabled and low-threshold images are pixel-identical, while the higher-threshold image shows small local differences. See [the visual comparison](CP2406_A3_Galaxy_Student_Template/VISUAL_COMPARISON.md) for images, measurements and limitations.
 
-Next, I will complete the remaining code review and journal sections, prepare the demonstration video, and verify a clean build before packaging the submission.
+The CleanCheck build and all four CTest suites have been verified on Windows. Remaining submission work
