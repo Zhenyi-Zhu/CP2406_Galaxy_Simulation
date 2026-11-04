@@ -224,3 +224,32 @@ linked successfully in CleanCheck. I then ran ReportingTests again;
 all 12 runtime cases passed with exit code 0. The four compile-time
 checks are separate from that runtime test count.
 
+## Build-target correction and full CTest run — 4 November 2026
+
+I removed tests/RendererTests.cpp from the CollisionTests target.
+Both test files define main(), so they must belong to separate
+executables. RendererTests remains a separate target linked with
+Renderer.cpp.
+
+An initial PowerShell build failed while compiling RendererTests.cpp
+without showing a specific compiler diagnostic. Building RendererTests
+inside CLion with the CleanCheck profile then compiled and linked
+successfully.
+
+I added CLion's MinGW bin directory to the current PowerShell PATH
+and requested a build of all default targets. Ninja reported
+"no work to do", confirming the targets were up to date. Because
+this command did not recompile any source, it does not establish
+the cause of the earlier PowerShell compilation failure.
+
+I then ran CTest from cmake-build-cleancheck:
+
+| Test suite | Result |
+|---|---|
+| configuration_validation | Passed |
+| collision_behaviour | Passed |
+| experiment_reporting | Passed |
+| renderer_safety | Passed |
+
+CTest reported 100% tests passed, with 0 failures out of 4 suites.
+Total reported test time was 1.33 seconds.

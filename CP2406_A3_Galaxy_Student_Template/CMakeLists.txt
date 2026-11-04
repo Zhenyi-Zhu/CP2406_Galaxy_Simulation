@@ -21,8 +21,9 @@ if(BUILD_TESTING)
     add_executable(ConfigTests tests/ConfigTests.cpp SimulationConfig.cpp)
     target_include_directories(ConfigTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
     add_test(NAME configuration_validation COMMAND ConfigTests)
-    add_executable(CollisionTests tests/CollisionTests.cpp Collisions.cpp
-            tests/RendererTests.cpp)
+    add_executable(CollisionTests
+            tests/CollisionTests.cpp
+            Collisions.cpp)
     target_include_directories(CollisionTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
     add_test(NAME collision_behaviour COMMAND CollisionTests)
     set_tests_properties(collision_behaviour PROPERTIES TIMEOUT 10)
