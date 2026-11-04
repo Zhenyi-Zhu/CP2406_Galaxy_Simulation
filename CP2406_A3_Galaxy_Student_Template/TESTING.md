@@ -253,3 +253,35 @@ I then ran CTest from cmake-build-cleancheck:
 
 CTest reported 100% tests passed, with 0 failures out of 4 suites.
 Total reported test time was 1.33 seconds.
+
+## Extracted ZIP verification — 4 November 2026
+
+I exported commit 77df575e1d95113510dc3c7f476b8e5f6d59711c
+using git archive and extracted it into a separate directory
+outside my working repository.
+
+I configured a new build directory using Windows, MinGW GCC 13.1.0,
+Ninja, C++20, Debug mode and BUILD_TESTING=ON. All 27 build steps
+completed successfully.
+
+CTest passed all four suites: configuration_validation,
+collision_behavior, experiment_reporting and renderer_safety.
+There were zero failures; total reported test time was 0.87 seconds.
+
+I then ran the newly built Galaxy executable from a separate
+smoke-test working directory with these arguments:
+
+`--bodies 40 --system-size 0.05 --steps 3 --dt 1 --collision-threshold 0 --collision-samples 0 --seed 2406 --output zip_smoke.csv`
+
+| Check | Expected | Observed |
+|---|---|---|
+| Program exit | Successful completion | Exit code 0 |
+| CSV output | One completed experiment row | One row; status completed |
+| Collision counts | No sampling or merging | Attempted 0, valid 0, merged 0 |
+| Active bodies | 40 | 40 |
+| Total mass | Initial and final values match | Both 4.0000000000000004e+29 kg |
+| Frame output | Three PPM frames | Three frames generated |
+| Missing FFmpeg | Report video failure while preserving simulation output | Warning displayed; CSV and frames retained |
+
+
+
