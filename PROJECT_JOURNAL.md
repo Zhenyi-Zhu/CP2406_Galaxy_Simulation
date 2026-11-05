@@ -336,10 +336,8 @@ verified all 13 reporting cases on Windows.
 
 ### 7. Weekly Reflection and Next Step
 
-The initialization issue showed me that valid command-line input
-must also satisfy assumptions inside the simulation. Checking the
-initial radius directly helped separate initialization behavior
-from movement during later steps.
+The 0.05 AU case passed the input checks but exposed an invalid initialization range.
+I learned to check how accepted values are used inside the program.
 
 I also learned that images can look almost identical even when
 the recorded collision counts differ. I used CSV results and file
@@ -400,8 +398,8 @@ two simulation steps with collisions disabled and expects two
 active bodies, zero merges and preserved total mass.
 
 The new case passed on Windows, alongside all 12 existing reporting
-cases. This demonstrated the value of choosing tests from specific
-failure conditions rather than relying only on a passing test count.
+cases. All the existing tests passed, but none used two bodies at exactly the same position.
+I added that case after the review found the problem.
 
 ### 4. Code Understanding
 
@@ -429,8 +427,8 @@ I reviewed all suggestions and kept only those I agreed with. The code, testing 
 ### 6. Future Improvement
 
 I would next automate the experiment matrix using unique output
-directories and filenames. This would reduce the risk of overwriting
-CSV files, frames or videos and make repeated experiments easier.
+directories and filenames.
+I accidentally overwrote an earlier CSV during a rerun. Next time, I would give each run its own output folder.
 
 I would also use repeated timing measurements before making
 performance claims, and extend tree tests to very close but distinct
