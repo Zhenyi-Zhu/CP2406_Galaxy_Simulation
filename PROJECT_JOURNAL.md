@@ -205,7 +205,7 @@ Date: 1 November 2026
 
 ## Weekly Journal Entry 3
 
-Week / dates: 2–4 November 2026
+Week / dates: 2–5 November 2026
 
 Project option: Galaxy Simulation
 
@@ -349,14 +349,14 @@ behavior from appearance alone.
 The CleanCheck profile provided evidence that the project could
 build without relying on the existing Debug build cache.
 
-Next, I will complete my final reflection, prepare the narrated
-demonstration and check the contents and buildability of the
-submission ZIP.
+I have completed the final reflection below. My remaining tasks
+are to prepare the narrated demonstration and regenerate and
+verify the final submission ZIP.
 
 My declaration: I confirm that this entry accurately records my progress and assistance received.
 
 Student initials / signature: Zhenyi Zhu
-Date: 4 November 2026
+Date: 5 November 2026
 
 ## Final Project Reflection
 
@@ -446,4 +446,4 @@ establish correctness or long-term stability for every configuration.
 - [✔] I can explain and modify the submitted code.
 - [✔] I have excluded build folders, caches and unnecessary generated files from my project ZIP.
 
-Student signature: Zhenyi Zhu    Date: 4 November 2026
+Student signature: Zhenyi Zhu    Date: 5 November 2026

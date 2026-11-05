@@ -10,7 +10,7 @@ I am developing this project from the lecturer-provided Galaxy starter template.
 4. In the Galaxy run configuration, set the working directory to the folder containing `main.cpp`.
 5. Use `--help` to display the available command-line options.
 
-For the initial baseline run, use these program arguments:
+For the initial baseline run,I use these program arguments:
 
 ```text
 --bodies 200 --system-size 50 --steps 20 --dt 1024000 --collision-threshold 0 --collision-samples 0 --seed 2406 --output baseline.csv
@@ -175,8 +175,8 @@ build. Full results and verification limits are recorded in
 
 ## Assessment documents
 
-- [Code review — Appendix A working draft](CODE_REVIEW.md)
-- [Development journal — Appendix B working draft](PROJECT_JOURNAL.md)
+- [Code review — Appendix A](CODE_REVIEW.md)
+- [Development journal — Appendix B](PROJECT_JOURNAL.md)
 
 ## Current status and submission preparation
 
@@ -185,4 +185,9 @@ I have also recorded initial-to-final barycentre movement and compared runs with
 On 2 November, I corrected the initialization radius range for small systems. The inner radius is now `min(0.1, systemSizeAU * 0.5)`. All 12 reporting tests passed in Windows, including checks at system sizes of 0.05, 0.1, 0.2 and 50 AU. A short 0.05 AU simulation also completed successfully; its results are stored in `CP2406_A3_Galaxy_Student_Template/small_system_check.csv`.
 I have completed the final-frame visual comparison for collision thresholds of 0, 0.01 and 1 AU. The disabled and low-threshold images are pixel-identical, while the higher-threshold image shows small local differences. See [the visual comparison](CP2406_A3_Galaxy_Student_Template/VISUAL_COMPARISON.md) for images, measurements and limitations.
 
-The CleanCheck build and all four CTest suites have been verified on Windows. Remaining submission work
+On 4 November, all four CTest suites passed in Windows CleanCheck
+after the coincident-body correction. ReportingTests contains
+13 passing runtime cases.
+
+An earlier archive exported from commit 77df575 also passed a
+fresh Windows build, all four CTest suites and a short simulation.

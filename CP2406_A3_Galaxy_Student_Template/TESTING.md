@@ -46,11 +46,11 @@ I ran the following checks in Windows/CLion. My evidence is the console output I
 |---|---|---|
 | `ConfigTests.exe` | `PASS: 142 configuration checks`; exit 0 | Console output |
 | `Galaxy.exe --bodies -1` | `Error: --bodies requires a non-negative integer`; exit 1 | Console output |
-| `Galaxy.exe --bodies 200abc` | Expected rejection confirmed | I confirmed that all requested cases were correct; I did not supply this case's individual output |
+| `Galaxy.exe --bodies 200abc` | Expected rejection confirmed | Console output |
 | `Galaxy.exe --seed 4294967296` | `Error: value out of range for --seed`; exit 1 | Console output |
 | `Galaxy.exe --output --steps 2` | `Error: missing value for --output`; exit 1 | Console output |
 | `Galaxy.exe --help` | Expanded help, including defaults and ranges; exit 0 | Console output |
-| Original 200-body, 20-step baseline | `Created 20 frames in images/.`, `Created galaxy.mp4`, `Completed baseline run` | Console output supplied earlier in this session |
+| Original 200-body, 20-step baseline | `Created 20 frames in images/.`, `Created galaxy.mp4`, `Completed baseline run` | Console output |
 
 These Windows results validate the local test executable, the selected error paths, help and the baseline output pipeline. The filesystem-error and sentinel-preservation results are from Linux; I have not separately confirmed those cases on Windows.
 
@@ -316,3 +316,12 @@ All 13 reporting test cases passed with exit code 0.
 This check covers exactly coincident positions. It does not establish
 safe tree depth or numerical stability for every extreme configuration.
 
+### Full regression verification after the correction
+
+After the coincident-body correction, I requested an all-target
+build in Windows CleanCheck.
+
+I then ran CTest. All four suites passed with zero failures:
+configuration_validation, collision_behavior,
+experiment_reporting and renderer_safety.
+The reported total test time was 0.86 seconds.
